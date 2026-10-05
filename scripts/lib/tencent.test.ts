@@ -22,6 +22,26 @@ describe('parseRankList', () => {
     expect(parsed.summary.rowCount).toBe(140)
   })
 
+  it('parses a trimmed real response (2026-10-04)', () => {
+    const parsed = parseRankList(fixture('hero_rank_list_v2.real.json'))
+    expect(parsed.date).toBe('2026-10-04')
+    expect(parsed.summary.rankKeys).toEqual(['0', '1', '2', '3', '4'])
+    expect(parsed.summary.emptyBrackets).toEqual(['legendary'])
+    expect(parsed.warnings).toEqual([])
+    expect(Object.keys(parsed.brackets).sort()).toEqual(['all', 'challenger', 'diamond', 'master'])
+    const rows = Object.values(parsed.brackets).flatMap((lanes) => Object.values(lanes ?? {}).flat())
+    expect(rows).toHaveLength(61)
+    for (const row of rows) {
+      expect(row.win).toBeGreaterThan(30)
+      expect(row.win).toBeLessThan(70)
+      expect(row.strength).toBeGreaterThanOrEqual(1)
+      expect(row.strengthLevel).toBeGreaterThanOrEqual(0)
+      expect(row.strengthLevel).toBeLessThanOrEqual(5)
+    }
+    // Small ban rates use scientific notation, e.g. "9.75E-4" for hero 10067 in all/duo.
+    expect(parsed.brackets.all?.duo?.find((row) => row.heroId === 10067)?.ban).toBe(0.1)
+  })
+
   it('converts string fractions to percentages and sorts rows by hero id', () => {
     const raw = stats()
     const first = raw.data['0']!['1']![0]!
@@ -55,6 +75,16 @@ describe('parseRankList', () => {
     const parsed = parseRankList(raw)
     expect(parsed.brackets.legendary).toBeUndefined()
     expect(parsed.warnings).toContain('Brackets missing from response: legendary')
+    expect(parsed.summary.emptyBrackets).toEqual([])
+  })
+
+  it('reports a present-but-empty bracket without warning', () => {
+    const raw = stats()
+    raw.data['4'] = {}
+    const parsed = parseRankList(raw)
+    expect(parsed.brackets.legendary).toBeUndefined()
+    expect(parsed.summary.emptyBrackets).toEqual(['legendary'])
+    expect(parsed.warnings.some((w) => w.includes('legendary'))).toBe(false)
   })
 
   it('uses the most common dtstatdate and warns about mixed dates', () => {

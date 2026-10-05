@@ -137,6 +137,9 @@ async function main(): Promise<void> {
       `champions.json ${championsChanged ? 'changed' : 'unchanged'} (${champions.length} champions)` +
       (dryRun ? ' [dry run: nothing written]' : ''),
   )
+  if (parsed.summary.emptyBrackets.length > 0) {
+    log(`Brackets with no rows in Tencent's response: ${parsed.summary.emptyBrackets.join(', ')}`)
+  }
 
   await setOutput('date', snapshot.date)
   await setOutput('snapshot', status)

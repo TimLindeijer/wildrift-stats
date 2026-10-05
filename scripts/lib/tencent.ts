@@ -97,6 +97,8 @@ export interface RankListSummary {
   laneKeys: string[]
   rowCount: number
   dates: Record<string, number>
+  /** Brackets whose rank key is present but has no rows (Tencent sends `"4": {}` for Legendary). */
+  emptyBrackets: Bracket[]
 }
 
 export interface ParsedRankList {
@@ -197,7 +199,13 @@ export function parseRankList(json: unknown): ParsedRankList {
   }
 
   const presentBrackets = BRACKETS.filter((b) => brackets[b])
-  const missingBrackets = BRACKETS.filter((b) => !brackets[b])
+  const sentRankKeys = new Set(Object.keys(data))
+  const sent = (bracket: Bracket) =>
+    Object.entries(RANK_KEY_TO_BRACKET).some(([key, value]) => value === bracket && sentRankKeys.has(key))
+  // An empty rank key is a known, stable quirk (Legendary is always `{}` so far), so it's
+  // reported in the summary; a rank key that disappears entirely is a warning.
+  const emptyBrackets = BRACKETS.filter((b) => !brackets[b] && sent(b))
+  const missingBrackets = BRACKETS.filter((b) => !brackets[b] && !sent(b))
   if (missingBrackets.length > 0) warnings.push(`Brackets missing from response: ${missingBrackets.join(', ')}`)
   for (const bracket of presentBrackets) {
     const missingLanes = LANES.filter((lane) => !brackets[bracket]?.[lane])
@@ -213,6 +221,7 @@ export function parseRankList(json: unknown): ParsedRankList {
       laneKeys: [...laneKeys].sort(),
       rowCount,
       dates: Object.fromEntries(sortedDates),
+      emptyBrackets,
     },
   }
 }

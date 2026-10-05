@@ -24,7 +24,8 @@ export function renderReport(input: ReportInput): string {
     `## Ranked snapshot ${snapshot.date}${input.dryRun ? ' (dry run)' : ''}`,
     '',
     `- Snapshot: **${status}**; champions.json: **${input.championsChanged ? 'changed' : 'unchanged'}** (${input.championCount} champions)`,
-    `- Rows: ${summary.rowCount}; rank keys: ${summary.rankKeys.join(', ')}; lane keys: ${summary.laneKeys.join(', ')}`,
+    `- Rows: ${summary.rowCount}; rank keys: ${summary.rankKeys.join(', ')}; lane keys: ${summary.laneKeys.join(', ')}` +
+      (summary.emptyBrackets.length > 0 ? `; empty brackets: ${summary.emptyBrackets.join(', ')}` : ''),
     `- dtstatdate values: ${Object.entries(summary.dates)
       .map(([date, count]) => `${date} ×${count}`)
       .join(', ')}`,
