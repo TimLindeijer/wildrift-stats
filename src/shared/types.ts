@@ -83,32 +83,31 @@ export interface Patch {
 export const TIERS = ['S+', 'S', 'A', 'B', 'C', 'D'] as const
 export type Tier = (typeof TIERS)[number]
 
+/** Champion fields the frontend needs (public/data/champions.json). */
+export type PublicChampion = Pick<Champion, 'heroId' | 'slug' | 'name' | 'title' | 'nameZh' | 'avatar' | 'lanes' | 'roles'>
+
+export interface PublicChampionsFile {
+  schema: 1
+  champions: PublicChampion[]
+}
+
 export interface LatestRow {
   heroId: number
   win: number
   pick: number
   ban: number
-  strength: number | null
-  strengthLevel: number | null
   tier: Tier
   /** Tier score, 0–100 (see src/shared/tiers.ts). */
   score: number
+  /** Tencent's rank of this champion within the lane (`strength`, 1 = strongest). */
+  cnRank: number | null
+  /** Tencent's tier (`strength_level`): 0 = T0 (best) … 5 = T5. */
+  cnTier: number | null
   /** Change vs the previous snapshot, in percentage points (null if not present then). */
   dWin: number | null
   dPick: number | null
   dBan: number | null
   prevTier: Tier | null
-}
-
-export type MoverWindowId = '1d' | '7d' | '30d' | 'patch'
-
-export interface MoverWindow {
-  id: MoverWindowId
-  label: string
-  /** Snapshot date to compare the latest snapshot against; null when history is too short. */
-  baseDate: string | null
-  /** Requested comparison date (e.g. latest − 7 days), for messaging when baseDate is null. */
-  targetDate: string | null
 }
 
 /** public/data/latest.json */
@@ -119,12 +118,11 @@ export interface LatestFile {
   fetchedAt: string
   /** Every snapshot date, ascending. */
   dates: string[]
-  windows: MoverWindow[]
   brackets: BracketTable<LatestRow>
 }
 
-/** [date, win, pick, ban, tier] */
-export type HistoryPoint = [date: string, win: number, pick: number, ban: number, tier: Tier]
+/** [date, win, pick, ban, score] — the tier follows from the score (tierForScore). */
+export type HistoryPoint = [date: string, win: number, pick: number, ban: number, score: number]
 
 /** public/data/history/<heroId>.json */
 export interface HistoryFile {
@@ -133,12 +131,27 @@ export interface HistoryFile {
   series: BracketTable<HistoryPoint>
 }
 
-/** [heroId, win, pick, ban] */
-export type DayRow = [heroId: number, win: number, pick: number, ban: number]
+export type MoverWindowId = '1d' | '7d' | '30d' | 'patch'
 
-/** public/data/days/<date>.json — compact snapshot used as a movers baseline. */
-export interface DayFile {
+/** [heroId, win, dWin, pick, dPick] — deltas in percentage points vs the window's base date. */
+export type MoverRow = [heroId: number, win: number, dWin: number, pick: number, dPick: number]
+
+export interface MoverWindow {
+  id: MoverWindowId
+  label: string
+  /** Snapshot the latest one is compared with; null while history is too short. */
+  baseDate: string | null
+  /** Date the window would ideally start at (latest − N days, or the patch date). */
+  targetDate: string | null
+  /** Patch version for the `patch` window. */
+  patch: string | null
+  /** Rows present in both snapshots, sorted by dWin descending. Empty when baseDate is null. */
+  brackets: BracketTable<MoverRow>
+}
+
+/** public/data/movers.json */
+export interface MoversFile {
   schema: 1
   date: string
-  brackets: BracketTable<DayRow>
+  windows: MoverWindow[]
 }

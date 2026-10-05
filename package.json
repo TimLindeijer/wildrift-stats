@@ -8,8 +8,8 @@
     "node": ">=22.22.0"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "npm run data:build && vite",
+    "build": "npm run data:build && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
     "typecheck": "tsc -b",
@@ -17,6 +17,7 @@
     "test:watch": "vitest",
     "fetch": "node scripts/fetch-stats.ts",
     "fetch:fixtures": "node scripts/fetch-stats.ts --stats-file scripts/fixtures/hero_rank_list_v2.json --heroes-file scripts/fixtures/hero_list.json --ddragon-file scripts/fixtures/ddragon_champion.json --dry-run",
+    "data:build": "node scripts/build-data.ts",
     "probe:history": "node scripts/probe-history.ts",
     "check": "npm run lint && npm run typecheck && npm test && npm run build"
   },
