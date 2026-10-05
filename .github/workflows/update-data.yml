@@ -43,19 +43,19 @@ jobs:
       # The fetcher only uses Node built-ins, so no `npm ci` is needed.
       - name: Fetch ranked stats
         id: fetch
-        run: node scripts/fetch-stats.ts --raw-dir .raw ${{ inputs.dry_run && '--dry-run' || '' }}
+        run: node scripts/fetch-stats.ts --raw-dir "$RUNNER_TEMP/raw" ${{ inputs.dry_run && '--dry-run' || '' }}
 
       - name: Probe per-champion history endpoint
         if: inputs.probe_history
         continue-on-error: true
-        run: node scripts/probe-history.ts --raw-dir .raw --hero 10001 --hero 10038
+        run: node scripts/probe-history.ts --raw-dir "$RUNNER_TEMP/raw" --hero 10001 --hero 10038
 
       - name: Upload raw responses
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: raw-responses-${{ github.run_id }}
-          path: .raw/
+          path: ${{ runner.temp }}/raw/
           retention-days: 14
           if-no-files-found: ignore
 
