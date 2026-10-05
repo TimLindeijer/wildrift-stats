@@ -1,0 +1,107 @@
+name: Update data
+
+on:
+  schedule:
+    # Twice a day, off the hour (10:23 and 22:23 China time).
+    - cron: '23 2 * * *'
+    - cron: '23 14 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Fetch and report, but don't commit
+        type: boolean
+        default: false
+      probe_history:
+        description: Also probe the per-champion history endpoint
+        type: boolean
+        default: false
+      force_deploy:
+        description: Deploy the site even if no data changed
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
+      sha: ${{ steps.commit.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      # The fetcher only uses Node built-ins, so no `npm ci` is needed.
+      - name: Fetch ranked stats
+        id: fetch
+        run: node scripts/fetch-stats.ts --raw-dir .raw ${{ inputs.dry_run && '--dry-run' || '' }}
+
+      - name: Probe per-champion history endpoint
+        if: inputs.probe_history
+        continue-on-error: true
+        run: node scripts/probe-history.ts --raw-dir .raw --hero 10001 --hero 10038
+
+      - name: Upload raw responses
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: raw-responses-${{ github.run_id }}
+          path: .raw/
+          retention-days: 14
+          if-no-files-found: ignore
+
+      - name: Commit and push
+        id: commit
+        if: ${{ !inputs.dry_run }}
+        env:
+          DATE: ${{ steps.fetch.outputs.date }}
+          SNAPSHOT: ${{ steps.fetch.outputs.snapshot }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data
+          if git diff --cached --quiet; then
+            echo 'No data changes.'
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          case "$SNAPSHOT" in
+            added) message="chore(data): add ranked snapshot $DATE" ;;
+            updated) message="chore(data): update ranked snapshot $DATE" ;;
+            *) message='chore(data): update champion list' ;;
+          esac
+          git commit -q -m "$message"
+          for attempt in 1 2 3 4 5; do
+            if git pull -q --rebase origin "$BRANCH" && git push -q origin "HEAD:$BRANCH"; then
+              echo 'changed=true' >> "$GITHUB_OUTPUT"
+              echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+              echo "Pushed: $message"
+              exit 0
+            fi
+            git rebase --abort 2>/dev/null || true
+            echo "Push attempt $attempt failed; retrying."
+            sleep $((attempt * 5))
+          done
+          echo '::error::Could not push the data commit.'
+          exit 1
+
+  deploy:
+    needs: update
+    if: github.ref == 'refs/heads/main' && (needs.update.outputs.changed == 'true' || inputs.force_deploy)
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/deploy-pages.yml
+    with:
+      ref: ${{ needs.update.outputs.sha }}
