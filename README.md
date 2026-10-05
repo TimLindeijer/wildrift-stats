@@ -32,7 +32,7 @@ flowchart LR
 3. When data changed, the job commits it as `github-actions[bot]` (`chore(data): add ranked snapshot YYYY-MM-DD`), rebasing before it pushes, and then calls `deploy-pages.yml` to build and deploy that commit. It has to call the deploy directly because pushes made with the workflow's `GITHUB_TOKEN` don't trigger `push` workflows.
 4. `npm run build` first runs `scripts/build-data.ts`, which turns the snapshots into the small files the frontend loads, and then builds the app with Vite.
 
-If the response changes shape (`result` isn't 0, the data is laid out differently, a value isn't a number, a rate falls outside 0–1, or there are far fewer rows than usual), the fetcher stops with a "Schema drift" error and commits nothing, so the site keeps showing the last good snapshot. Smaller surprises, such as a missing bracket or role or an unknown key, show up as warnings in the job summary.
+If the response changes shape (`result` isn't 0, the data is laid out differently, a value isn't a number, a rate falls outside 0–1, or there are far fewer rows than usual), the fetcher stops with a "Schema drift" error and commits nothing, so the site keeps showing the last good snapshot. Smaller surprises, such as a missing bracket or role or an unknown key, show up as warnings on the run and in its job summary.
 
 ## Data source
 
@@ -51,7 +51,7 @@ What the real data showed:
 
 - The Legendary bracket (`4`) is present but empty. The site shows it as unavailable until Tencent fills it.
 - A champion is only listed in a role when it's picked in about 1% or more of that role's games, so rare picks come and go.
-- A role's pick rates add up to about 200%, because both teams fill every role.
+- The listed pick rates in a role add up to about 170–190%. Both teams fill every role, so the full total would be 200%; champions below the listing cutoff account for the rest.
 - The ban rate is per champion, so it's the same in every role.
 - Values are strings, sometimes in scientific notation (`"9.75E-4"`).
 - `strength` is Tencent's rank within the role (1 is best) and `strength_level` (0–5) splits that ranking into fixed-size groups that lean heavily on popularity. The site shows them as "CN tier" for reference and doesn't use them for its own tiers.
@@ -110,7 +110,7 @@ Built into `public/data/` by `npm run data:build`. These files aren't committed;
 | `latest.json` | every page | The latest snapshot with tiers, scores and changes since the previous snapshot, plus the list of snapshot dates. It stays about the same size as history grows. |
 | `champions.json`, `patches.json` | every page | Trimmed copies of the files above. |
 | `movers.json` | Movers | Win-rate changes for each window. |
-| `history/<heroId>.json` | champion and Compare pages | The champion's daily `[date, win, pick, ban, score]` points for each bracket and role. Loaded only when needed; about 90 KB per champion per year before compression. |
+| `history/<heroId>.json` | champion and Compare pages | The champion's daily `[date, win, pick, ban, score]` points for each bracket and role. Loaded only when needed. A year of daily points is about 65 KB per champion on average (up to about 150 KB for champions played in several roles), or about 17 KB gzipped. |
 
 ## Local development
 
