@@ -15,6 +15,9 @@
     "typecheck": "tsc -b",
     "test": "vitest run",
     "test:watch": "vitest",
+    "fetch": "node scripts/fetch-stats.ts",
+    "fetch:fixtures": "node scripts/fetch-stats.ts --stats-file scripts/fixtures/hero_rank_list_v2.json --heroes-file scripts/fixtures/hero_list.json --ddragon-file scripts/fixtures/ddragon_champion.json --dry-run",
+    "probe:history": "node scripts/probe-history.ts",
     "check": "npm run lint && npm run typecheck && npm test && npm run build"
   },
   "dependencies": {

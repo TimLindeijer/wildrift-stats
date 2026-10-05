@@ -1,0 +1,175 @@
+{
+  "type": "champion",
+  "format": "standAloneComplex",
+  "version": "15.20.1",
+  "data": {
+    "Aatrox": {
+      "version": "15.20.1",
+      "id": "Aatrox",
+      "key": "266",
+      "name": "Aatrox",
+      "title": "the Darkin Blade"
+    },
+    "Ahri": {
+      "version": "15.20.1",
+      "id": "Ahri",
+      "key": "103",
+      "name": "Ahri",
+      "title": "the Nine-Tailed Fox"
+    },
+    "AurelionSol": {
+      "version": "15.20.1",
+      "id": "AurelionSol",
+      "key": "136",
+      "name": "Aurelion Sol",
+      "title": "The Star Forger"
+    },
+    "Braum": {
+      "version": "15.20.1",
+      "id": "Braum",
+      "key": "201",
+      "name": "Braum",
+      "title": "the Heart of the Freljord"
+    },
+    "Chogath": {
+      "version": "15.20.1",
+      "id": "Chogath",
+      "key": "31",
+      "name": "Cho'Gath",
+      "title": "the Terror of the Void"
+    },
+    "DrMundo": {
+      "version": "15.20.1",
+      "id": "DrMundo",
+      "key": "36",
+      "name": "Dr. Mundo",
+      "title": "the Madman of Zaun"
+    },
+    "Garen": {
+      "version": "15.20.1",
+      "id": "Garen",
+      "key": "86",
+      "name": "Garen",
+      "title": "the Might of Demacia"
+    },
+    "JarvanIV": {
+      "version": "15.20.1",
+      "id": "JarvanIV",
+      "key": "59",
+      "name": "Jarvan IV",
+      "title": "the Exemplar of Demacia"
+    },
+    "Jinx": {
+      "version": "15.20.1",
+      "id": "Jinx",
+      "key": "222",
+      "name": "Jinx",
+      "title": "the Loose Cannon"
+    },
+    "KSante": {
+      "version": "15.20.1",
+      "id": "KSante",
+      "key": "897",
+      "name": "K'Sante",
+      "title": "the Pride of Nazumah"
+    },
+    "Kaisa": {
+      "version": "15.20.1",
+      "id": "Kaisa",
+      "key": "145",
+      "name": "Kai'Sa",
+      "title": "Daughter of the Void"
+    },
+    "Khazix": {
+      "version": "15.20.1",
+      "id": "Khazix",
+      "key": "121",
+      "name": "Kha'Zix",
+      "title": "the Voidreaver"
+    },
+    "KogMaw": {
+      "version": "15.20.1",
+      "id": "KogMaw",
+      "key": "96",
+      "name": "Kog'Maw",
+      "title": "the Mouth of the Abyss"
+    },
+    "LeeSin": {
+      "version": "15.20.1",
+      "id": "LeeSin",
+      "key": "64",
+      "name": "Lee Sin",
+      "title": "the Blind Monk"
+    },
+    "Lux": {
+      "version": "15.20.1",
+      "id": "Lux",
+      "key": "99",
+      "name": "Lux",
+      "title": "the Lady of Luminosity"
+    },
+    "MasterYi": {
+      "version": "15.20.1",
+      "id": "MasterYi",
+      "key": "11",
+      "name": "Master Yi",
+      "title": "the Wuju Bladesman"
+    },
+    "MissFortune": {
+      "version": "15.20.1",
+      "id": "MissFortune",
+      "key": "21",
+      "name": "Miss Fortune",
+      "title": "the Bounty Hunter"
+    },
+    "MonkeyKing": {
+      "version": "15.20.1",
+      "id": "MonkeyKing",
+      "key": "62",
+      "name": "Wukong",
+      "title": "the Monkey King"
+    },
+    "Nunu": {
+      "version": "15.20.1",
+      "id": "Nunu",
+      "key": "20",
+      "name": "Nunu & Willump",
+      "title": "the Boy and His Yeti"
+    },
+    "Thresh": {
+      "version": "15.20.1",
+      "id": "Thresh",
+      "key": "412",
+      "name": "Thresh",
+      "title": "the Chain Warden"
+    },
+    "TwistedFate": {
+      "version": "15.20.1",
+      "id": "TwistedFate",
+      "key": "4",
+      "name": "Twisted Fate",
+      "title": "the Card Master"
+    },
+    "Vayne": {
+      "version": "15.20.1",
+      "id": "Vayne",
+      "key": "67",
+      "name": "Vayne",
+      "title": "the Night Hunter"
+    },
+    "Velkoz": {
+      "version": "15.20.1",
+      "id": "Velkoz",
+      "key": "161",
+      "name": "Vel'Koz",
+      "title": "the Eye of the Void"
+    },
+    "XinZhao": {
+      "version": "15.20.1",
+      "id": "XinZhao",
+      "key": "5",
+      "name": "Xin Zhao",
+      "title": "the Seneschal of Demacia"
+    }
+  }
+}

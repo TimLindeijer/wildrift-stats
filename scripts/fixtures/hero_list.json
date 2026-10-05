@@ -1,0 +1,457 @@
+{
+  "heroList": {
+    "10001": {
+      "heroId": "10001",
+      "name": "盖伦",
+      "title": "德玛西亚之力",
+      "roles": [
+        "战士"
+      ],
+      "lane": "单人路",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10001.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1000101.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/Garen_0.jpg",
+      "alias": "gailun",
+      "isWeekFree": "0",
+      "difficultyL": "1",
+      "damage": "2",
+      "surviveL": "3",
+      "assistL": "1"
+    },
+    "10002": {
+      "heroId": "10002",
+      "name": "亚托克斯",
+      "title": "暗裔剑魔",
+      "roles": [
+        "战士"
+      ],
+      "lane": "单人路;打野",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10002.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1000201.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/Aatrox_0.jpg",
+      "alias": "yatuokesi",
+      "isWeekFree": "0",
+      "difficultyL": "2",
+      "damage": "3",
+      "surviveL": "3",
+      "assistL": "2"
+    },
+    "10003": {
+      "heroId": "10003",
+      "name": "拉克丝",
+      "title": "光辉女郎",
+      "roles": [
+        "法师"
+      ],
+      "lane": "辅助;中路",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10003.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1000301.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/Lux_0.jpg",
+      "alias": "lakesi",
+      "isWeekFree": "0",
+      "difficultyL": "1",
+      "damage": "3",
+      "surviveL": "1",
+      "assistL": "2"
+    },
+    "10008": {
+      "heroId": "10008",
+      "name": "努努和威朗普",
+      "title": "雪原双子",
+      "roles": [
+        "坦克"
+      ],
+      "lane": "打野",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10008.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1000801.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/Nunu_0.jpg",
+      "alias": "nunuheweilangpu",
+      "isWeekFree": "0",
+      "difficultyL": "2",
+      "damage": "1",
+      "surviveL": "3",
+      "assistL": "2"
+    },
+    "10009": {
+      "heroId": "10009",
+      "name": "孙悟空",
+      "title": "齐天大圣",
+      "roles": [
+        "战士"
+      ],
+      "lane": "打野;单人路",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10009.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1000901.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/MonkeyKing_0.jpg",
+      "alias": "sunwukong",
+      "isWeekFree": "0",
+      "difficultyL": "1",
+      "damage": "3",
+      "surviveL": "2",
+      "assistL": "1"
+    },
+    "10010": {
+      "heroId": "10010",
+      "name": "薇恩",
+      "title": "暗夜猎手",
+      "roles": [
+        "射手"
+      ],
+      "lane": "射手",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10010.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1001001.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/Vayne_0.jpg",
+      "alias": "weien",
+      "isWeekFree": "0",
+      "difficultyL": "2",
+      "damage": "3",
+      "surviveL": "1",
+      "assistL": "1"
+    },
+    "10016": {
+      "heroId": "10016",
+      "name": "赵信",
+      "title": "德邦总管",
+      "roles": [
+        "战士"
+      ],
+      "lane": "打野",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10016.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1001601.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/XinZhao_0.jpg",
+      "alias": "zhaoxin",
+      "isWeekFree": "0",
+      "difficultyL": "1",
+      "damage": "2",
+      "surviveL": "2",
+      "assistL": "1"
+    },
+    "10017": {
+      "heroId": "10017",
+      "name": "卡兹克",
+      "title": "虚空掠夺者",
+      "roles": [
+        "刺客"
+      ],
+      "lane": "打野",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10017.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1001701.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/Khazix_0.jpg",
+      "alias": "kazike",
+      "isWeekFree": "0",
+      "difficultyL": "2",
+      "damage": "3",
+      "surviveL": "1",
+      "assistL": "1"
+    },
+    "10018": {
+      "heroId": "10018",
+      "name": "金克丝",
+      "title": "暴走萝莉",
+      "roles": [
+        "射手"
+      ],
+      "lane": "射手",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10018.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1001801.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/Jinx_0.jpg",
+      "alias": "jinkesi",
+      "isWeekFree": "0",
+      "difficultyL": "2",
+      "damage": "3",
+      "surviveL": "1",
+      "assistL": "1"
+    },
+    "10021": {
+      "heroId": "10021",
+      "name": "布隆",
+      "title": "弗雷尔卓德之心",
+      "roles": [
+        "坦克"
+      ],
+      "lane": "辅助",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10021.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1002101.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/Braum_0.jpg",
+      "alias": "bulong",
+      "isWeekFree": "0",
+      "difficultyL": "2",
+      "damage": "1",
+      "surviveL": "2",
+      "assistL": "2"
+    },
+    "10023": {
+      "heroId": "10023",
+      "name": "奥瑞利安·索尔",
+      "title": "铸星龙王",
+      "roles": [
+        "法师"
+      ],
+      "lane": "中路",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10023.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1002301.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/AurelionSol_0.jpg",
+      "alias": "aoruilian·suoer",
+      "isWeekFree": "0",
+      "difficultyL": "3",
+      "damage": "3",
+      "surviveL": "1",
+      "assistL": "1"
+    },
+    "10025": {
+      "heroId": "10025",
+      "name": "崔斯特",
+      "title": "卡牌大师",
+      "roles": [
+        "法师"
+      ],
+      "lane": "中路",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10025.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1002501.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/TwistedFate_0.jpg",
+      "alias": "cuisite",
+      "isWeekFree": "0",
+      "difficultyL": "2",
+      "damage": "3",
+      "surviveL": "1",
+      "assistL": "1"
+    },
+    "10026": {
+      "heroId": "10026",
+      "name": "卡莎",
+      "title": "虚空之女",
+      "roles": [
+        "射手"
+      ],
+      "lane": "射手",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10026.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1002601.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/Kaisa_0.jpg",
+      "alias": "kasha",
+      "isWeekFree": "0",
+      "difficultyL": "2",
+      "damage": "3",
+      "surviveL": "1",
+      "assistL": "1"
+    },
+    "10038": {
+      "heroId": "10038",
+      "name": "阿狸",
+      "title": "九尾妖狐",
+      "roles": [
+        "法师"
+      ],
+      "lane": "中路",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10038.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1003801.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/Ahri_0.jpg",
+      "alias": "eli",
+      "isWeekFree": "0",
+      "difficultyL": "2",
+      "damage": "3",
+      "surviveL": "1",
+      "assistL": "1"
+    },
+    "10056": {
+      "heroId": "10056",
+      "name": "嘉文四世",
+      "title": "德玛西亚皇子",
+      "roles": [
+        "战士"
+      ],
+      "lane": "打野;单人路",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10056.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1005601.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/JarvanIV_0.jpg",
+      "alias": "jiawensishi",
+      "isWeekFree": "0",
+      "difficultyL": "1",
+      "damage": "2",
+      "surviveL": "2",
+      "assistL": "2"
+    },
+    "10059": {
+      "heroId": "10059",
+      "name": "李青",
+      "title": "盲僧",
+      "roles": [
+        "战士"
+      ],
+      "lane": "打野",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10059.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1005901.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/LeeSin_0.jpg",
+      "alias": "liqing",
+      "isWeekFree": "0",
+      "difficultyL": "3",
+      "damage": "3",
+      "surviveL": "2",
+      "assistL": "1"
+    },
+    "10062": {
+      "heroId": "10062",
+      "name": "蒙多医生",
+      "title": "祖安狂人",
+      "roles": [
+        "坦克"
+      ],
+      "lane": "单人路;打野",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10062.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1006201.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/DrMundo_0.jpg",
+      "alias": "mengduoyisheng",
+      "isWeekFree": "0",
+      "difficultyL": "1",
+      "damage": "2",
+      "surviveL": "3",
+      "assistL": "1"
+    },
+    "10066": {
+      "heroId": "10066",
+      "name": "厄运小姐",
+      "title": "赏金猎人",
+      "roles": [
+        "射手"
+      ],
+      "lane": "射手",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10066.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1006601.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/MissFortune_0.jpg",
+      "alias": "eyunxiaojie",
+      "isWeekFree": "0",
+      "difficultyL": "1",
+      "damage": "3",
+      "surviveL": "1",
+      "assistL": "1"
+    },
+    "10070": {
+      "heroId": "10070",
+      "name": "易",
+      "title": "无极剑圣",
+      "roles": [
+        "刺客"
+      ],
+      "lane": "打野",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10070.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1007001.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/MasterYi_0.jpg",
+      "alias": "yi",
+      "isWeekFree": "0",
+      "difficultyL": "1",
+      "damage": "3",
+      "surviveL": "1",
+      "assistL": "1"
+    },
+    "10088": {
+      "heroId": "10088",
+      "name": "科加斯",
+      "title": "虚空恐惧",
+      "roles": [
+        "坦克"
+      ],
+      "lane": "单人路;打野",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10088.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1008801.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/Chogath_0.jpg",
+      "alias": "kejiasi",
+      "isWeekFree": "0",
+      "difficultyL": "2",
+      "damage": "1",
+      "surviveL": "3",
+      "assistL": "1"
+    },
+    "10110": {
+      "heroId": "10110",
+      "name": "克格莫",
+      "title": "深渊巨口",
+      "roles": [
+        "射手"
+      ],
+      "lane": "射手",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10110.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1011001.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/Kogmaw_0.jpg",
+      "alias": "kegemo",
+      "isWeekFree": "0",
+      "difficultyL": "3",
+      "damage": "3",
+      "surviveL": "1",
+      "assistL": "1"
+    },
+    "10129": {
+      "heroId": "10129",
+      "name": "维克兹",
+      "title": "虚空之眼",
+      "roles": [
+        "法师"
+      ],
+      "lane": "中路;辅助",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10129.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1012901.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/Velkoz_0.jpg",
+      "alias": "weikezi",
+      "isWeekFree": "0",
+      "difficultyL": "2",
+      "damage": "3",
+      "surviveL": "1",
+      "assistL": "2"
+    },
+    "10130": {
+      "heroId": "10130",
+      "name": "锤石",
+      "title": "魂锁典狱长",
+      "roles": [
+        "坦克"
+      ],
+      "lane": "辅助",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10130.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1013001.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/Thresh_0.jpg",
+      "alias": "chuishi",
+      "isWeekFree": "0",
+      "difficultyL": "3",
+      "damage": "1",
+      "surviveL": "2",
+      "assistL": "3"
+    },
+    "10152": {
+      "heroId": "10152",
+      "name": "奎桑提",
+      "title": "纳祖芒荣耀",
+      "roles": [
+        "战士"
+      ],
+      "lane": "单人路",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10152.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1015201.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/Ksante_0.jpg",
+      "alias": "kuisangti",
+      "isWeekFree": "0",
+      "difficultyL": "3",
+      "damage": "2",
+      "surviveL": "3",
+      "assistL": "2"
+    },
+    "10166": {
+      "heroId": "10166",
+      "name": "诺拉",
+      "title": "奇妙远旅",
+      "roles": [
+        "法师"
+      ],
+      "lane": "中路",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10166.png",
+      "card": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/CardPictures/S_R_1016601.png",
+      "poster": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/Posters/Norra_0.jpg",
+      "alias": "nuola",
+      "isWeekFree": "0",
+      "difficultyL": "2",
+      "damage": "3",
+      "surviveL": "1",
+      "assistL": "1"
+    }
+  },
+  "version": "7.3",
+  "fileName": "hero_list.js",
+  "fileTime": "2026-09-29 16:09:34"
+}
