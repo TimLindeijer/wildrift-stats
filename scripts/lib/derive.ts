@@ -3,6 +3,7 @@
  * (public/data/). No I/O here; scripts/build-data.ts reads and writes the files.
  */
 import { BRACKETS, LANES, type Bracket, type Lane } from '../../src/shared/constants.ts'
+import { addDays, currentPatch } from '../../src/shared/dates.ts'
 import { scoreRows, tierForScore } from '../../src/shared/tiers.ts'
 import type {
   BracketTable,
@@ -117,21 +118,7 @@ export function buildLatest(snapshots: readonly Snapshot[]): LatestFile {
   }
 }
 
-/** Shift a YYYY-MM-DD date by whole days (UTC). */
-export function addDays(date: string, days: number): string {
-  const value = new Date(`${date}T00:00:00Z`)
-  value.setUTCDate(value.getUTCDate() + days)
-  return value.toISOString().slice(0, 10)
-}
-
-/** The newest patch released on or before `date`. */
-export function currentPatch(patches: readonly Patch[], date: string): Patch | null {
-  let result: Patch | null = null
-  for (const patch of patches) {
-    if (patch.date <= date && (!result || patch.date >= result.date)) result = patch
-  }
-  return result
-}
+export { addDays, currentPatch }
 
 export const MOVER_WINDOWS: readonly { id: MoverWindowId; days: number | null; label: string }[] = [
   { id: '1d', days: 1, label: '1 day' },
