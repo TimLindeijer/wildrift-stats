@@ -1,0 +1,12 @@
+:root {
+  color-scheme: dark;
+  background: #070b12;
+  color: #e8e3d6;
+  font-family: ui-sans-serif, sans-serif;
+}
+
+.placeholder {
+  max-width: 40rem;
+  margin: 20vh auto;
+  padding: 0 1.5rem;
+}
