@@ -1,11 +1,25 @@
 <!doctype html>
+<!--
+  Design contract (keep changes consistent with it).
+  THESIS: a scouting ledger for Wild Rift ranked play. Numbers first, decoration last.
+  OWN-WORLD: Hextech gold (#c8aa6e) on deep navy (#0b1220) is the only accent pairing. Teal means up,
+  coral means down, and the six tier colours appear only on tier badges.
+  STORY: open the tier list, filter to a role, follow a champion to its trend charts, compare it with
+  rivals, and check who moved since yesterday or since the patch.
+  FIRST VIEWPORT: the data date in the header, the tier-list controls and the top of the table. No
+  hero banner, no headline metrics.
+  FORM: Big Shoulders Display only for the brand, h1/h2, tier badges and champion names. Everything
+  else uses the system UI font with tabular numbers. Rules are 1px. More space above headings than
+  below. No cards, gradients on text, glass, modals or monospace costume. Loading placeholders are
+  static, and the only motion is the chart line draw, which respects prefers-reduced-motion.
+-->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#070b12" />
+    <meta name="theme-color" content="#0b1220" />
     <meta
       name="description"
       content="Wild Rift ranked champion tier list with win, pick and ban rates over time, from Tencent's public China-server ranked stats."
