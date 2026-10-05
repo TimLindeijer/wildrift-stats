@@ -1,2 +1,169 @@
-# wildrift-stats
-Track League of Legends: Wild Rift ranked champion win, pick and ban rates over time. Daily snapshots of official China-server stats with a tier list and history charts.
+# Wild Rift Stats
+
+Ranked champion win, pick and ban rates for League of Legends: Wild Rift, tracked over time.
+
+**Live site: <https://timlindeijer.github.io/wildrift-stats/>**
+
+The numbers come from Tencent's public ranked stats for the **China server**. Riot has no public Wild Rift API, and nobody publishes stats for ARAM or other modes, so the site covers **ranked games only**.
+
+## What's on the site
+
+- **Tier list**: every champion by rank bracket (All, Diamond+, Master+, Challenger+, Legendary) and role (Baron, Jungle, Mid, Duo, Support), with search and sortable tier, win, pick, ban and change columns.
+- **Champion pages**: current numbers and changes, win, pick and ban rate charts with dashed lines at patch releases, and a matrix of every role and bracket.
+- **Compare**: up to six champions on one chart, by win rate, pick rate, ban rate or tier score.
+- **Movers**: the biggest win-rate gains and drops over 1, 7 or 30 days, or since the current patch.
+- **About**: the data source, units and how tiers work.
+
+Filters are kept in the URL, so every view can be shared or bookmarked.
+
+## How it works
+
+Tencent's endpoint only returns the current day, so the history is built by [git scraping](https://simonwillison.net/2020/Oct/9/git-scraping/): a scheduled GitHub Action fetches the day's stats and commits them to this repository. The site is static. It reads the committed files and has no server or database.
+
+```mermaid
+flowchart LR
+  A[Tencent ranked stats] -->|update-data.yml, twice a day| B[data/snapshots/*.json]
+  B -->|npm run build| C[public/data + app bundle]
+  C -->|deploy-pages.yml| D[GitHub Pages]
+```
+
+1. `update-data.yml` runs at 02:41 and 14:41 UTC. Tencent publishes the previous day's stats at about 02:00 UTC; the second run is a safety net.
+2. `scripts/fetch-stats.ts` fetches the stats and the champion list, validates them and writes `data/snapshots/<date>.json` and `data/champions.json`. The date is Tencent's stats date (`dtstatdate`), not the day of the run. Files are only written when their content changes, so a run with nothing new commits nothing.
+3. When data changed, the job commits it as `github-actions[bot]` (`chore(data): add ranked snapshot YYYY-MM-DD`), rebasing before it pushes, and then calls `deploy-pages.yml` to build and deploy that commit. It has to call the deploy directly because pushes made with the workflow's `GITHUB_TOKEN` don't trigger `push` workflows.
+4. `npm run build` first runs `scripts/build-data.ts`, which turns the snapshots into the small files the frontend loads, and then builds the app with Vite.
+
+If the response changes shape (`result` isn't 0, the data is laid out differently, a value isn't a number, a rate falls outside 0–1, or there are far fewer rows than usual), the fetcher stops with a "Schema drift" error and commits nothing, so the site keeps showing the last good snapshot. Smaller surprises, such as a missing bracket or role or an unknown key, show up as warnings in the job summary.
+
+## Data source
+
+| What | Where |
+| --- | --- |
+| Ranked stats | `https://mlol.qt.qq.com/go/lgame_battle_info/hero_rank_list_v2` |
+| Champion list (Chinese names, icons, lanes) | `https://game.gtimg.cn/images/lgamem/act/lrlib/js/heroList/hero_list.js` |
+| English names | Riot Data Dragon `champion.json` |
+
+The stats arrive as `data[rank][lane] = rows`:
+
+- Rank keys: `0` All ranks, `1` Diamond+, `2` Master+, `3` Challenger+, `4` Legendary.
+- Lane keys: `1` Mid, `2` Baron, `3` Duo, `4` Support, `5` Jungle.
+
+What the real data showed:
+
+- The Legendary bracket (`4`) is present but empty. The site shows it as unavailable until Tencent fills it.
+- A champion is only listed in a role when it's picked in about 1% or more of that role's games, so rare picks come and go.
+- A role's pick rates add up to about 200%, because both teams fill every role.
+- The ban rate is per champion, so it's the same in every role.
+- Values are strings, sometimes in scientific notation (`"9.75E-4"`).
+- `strength` is Tencent's rank within the role (1 is best) and `strength_level` (0–5) splits that ranking into fixed-size groups that lean heavily on popularity. The site shows them as "CN tier" for reference and doesn't use them for its own tiers.
+- The per-champion endpoint `hero_rank_data_v2` also returns only the current day, so earlier history **can't be backfilled**. `npm run probe:history`, or the `probe_history` workflow option, prints what it returns.
+
+English names come from each champion's poster file name (`.../Posters/Garen_0.jpg` gives `Garen`), matched case-insensitively against Data Dragon ids (`MonkeyKing` is Wukong). Champions Data Dragon doesn't know, such as the Wild Rift–only Norra, use `NAME_OVERRIDES` in `scripts/lib/champions.ts`, and anything left over falls back to splitting the CamelCase key. The fetcher warns in the job summary about every champion without a confident name. If Data Dragon is unreachable, it keeps the names it resolved before.
+
+### Units
+
+All rates are stored as **percentages with two decimals**: `51.23` means 51.23%. Changes (Δ) are differences in **percentage points**.
+
+### Limitations
+
+- **China server only.** Balance, patch timing and the meta can differ in other regions.
+- **Ranked only.** There's no public source for ARAM or other modes.
+- **History starts on 2026-10-04**, the first day the job ran, and can't be backfilled. Trend charts appear once a role and bracket has three daily snapshots.
+- **Legendary has no data** in Tencent's responses so far.
+- **Tencent can change or remove the endpoint** at any time. The update job then fails loudly, and the site keeps the last good data.
+- Patch dates are maintained by hand (see [Adding a patch](#adding-a-patch)).
+
+## Tiers
+
+The site computes its own tiers for each role and bracket from each day's snapshot:
+
+```text
+score = 100 × (0.60 × win percentile + 0.25 × pick percentile + 0.15 × ban percentile)
+```
+
+A percentile runs from 0 (lowest in the role) to 1 (highest), and ties share their average rank. The score sets the tier:
+
+| Tier | Score |
+| --- | --- |
+| S+ | 80 or more |
+| S | 65 to under 80 |
+| A | 50 to under 65 |
+| B | 35 to under 50 |
+| C | 20 to under 35 |
+| D | under 20 |
+
+The weights and thresholds are in `src/shared/tiers.ts`. Because the score is relative, a tier says how a champion ranks in its role that day, not whether it wins more than half its games.
+
+## Data files
+
+Committed by the update job:
+
+| File | Contents |
+| --- | --- |
+| `data/snapshots/YYYY-MM-DD.json` | One day's stats: `brackets[bracket][lane]` holds `{ heroId, win, pick, ban, strength, strengthLevel }` rows, plus `date`, `fetchedAt` and `source`. About 70 KB a day. |
+| `data/champions.json` | `heroId`, English `name` and `title`, `slug`, Chinese `nameZh`, `avatar` URL, `lanes` and `roles` for every champion. |
+| `data/patches.json` | Patch versions and release dates for chart markers and the "since patch" Movers window. Edited by hand. |
+
+Built into `public/data/` by `npm run data:build`. These files aren't committed; `npm run dev` and `npm run build` rebuild them.
+
+| File | Loaded by | Contents |
+| --- | --- | --- |
+| `latest.json` | every page | The latest snapshot with tiers, scores and changes since the previous snapshot, plus the list of snapshot dates. It stays about the same size as history grows. |
+| `champions.json`, `patches.json` | every page | Trimmed copies of the files above. |
+| `movers.json` | Movers | Win-rate changes for each window. |
+| `history/<heroId>.json` | champion and Compare pages | The champion's daily `[date, win, pick, ban, score]` points for each bracket and role. Loaded only when needed; about 90 KB per champion per year before compression. |
+
+## Local development
+
+You need Node 22 (see `.nvmrc`) and npm.
+
+```sh
+npm ci
+npm run dev        # http://localhost:5173/wildrift-stats/
+npm test           # Vitest
+npm run lint       # ESLint
+npm run typecheck  # tsc -b
+npm run build      # build public/data, then the site into dist/
+npm run check      # lint, typecheck, test and build
+```
+
+The data scripts are TypeScript run directly by Node, and the fetcher only uses Node built-ins:
+
+```sh
+npm run fetch                     # fetch live stats and update data/
+npm run fetch -- --dry-run        # fetch and report, write nothing
+npm run fetch -- --raw-dir .raw   # also keep the raw responses
+npm run fetch:fixtures            # offline dry run against scripts/fixtures/
+npm run data:build                # rebuild public/data/ from data/
+```
+
+Some networks block the qq.com hosts, which shows up as TLS handshake errors such as `SEC_E_ILLEGAL_MESSAGE` or `SSLV3_ALERT_HANDSHAKE_FAILURE`. GitHub's runners reach them fine, so you can run the **Update data** workflow with `dry_run` checked to see what a fetch would do.
+
+## Adding a patch
+
+Add an entry to `data/patches.json`:
+
+```json
+{"version":"7.4","date":"YYYY-MM-DD","url":"https://wildrift.leagueoflegends.com/en-us/news/game-updates/wild-rift-patch-notes-7-4/"}
+```
+
+Use the release date from the [official patch notes](https://wildrift.leagueoflegends.com/en-us/news/). Order doesn't matter: the build sorts the list, and fails if a date is invalid or a version appears twice. Commit and push to `main`, and the push redeploys the site. The update job also warns in its summary when Tencent's champion list reports a game version that isn't in the file.
+
+## Workflows
+
+| Workflow | Runs on | What it does |
+| --- | --- | --- |
+| `ci.yml` | pushes to `main` and pull requests | `npm ci`, lint, typecheck, test and build |
+| `update-data.yml` | 02:41 and 14:41 UTC, and manually | Fetch, commit changed data, deploy |
+| `deploy-pages.yml` | pushes to `main`, manually, and from `update-data.yml` | Build and deploy to GitHub Pages |
+
+A manual **Update data** run has three options: `dry_run` (fetch and report without committing), `probe_history` (also print what the per-champion endpoint returns) and `force_deploy` (deploy even if no data changed). Every run keeps the raw API responses as an artifact for 14 days.
+
+GitHub disables scheduled workflows in public repositories after 60 days without activity in the repository. The daily data commits should keep it active. If the schedule does stop, for example after the endpoint has been broken for a long time, re-enable **Update data** in the repository's **Actions** tab.
+
+## Disclaimer
+
+Wild Rift Stats is an unofficial fan project. It isn't endorsed by Riot Games or Tencent and isn't affiliated with either. League of Legends: Wild Rift and all associated properties are trademarks or registered trademarks of Riot Games, Inc. The data comes from Tencent's public China-server ranked stats.
+
+## License
+
+No license has been chosen yet.
