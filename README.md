@@ -10,7 +10,7 @@ The numbers come from Tencent's public ranked stats for the **China server**. Ri
 
 - **Tier list**: every champion by rank bracket (All, Diamond+, Master+, Challenger+, Legendary) and role (Baron, Jungle, Mid, Duo, Support), with search and sortable tier, win, pick, ban and change columns.
 - **Champions**: Tencent's official 1–3 ratings (difficulty, damage, toughness, utility) and base stats at level 1 or 15 for every champion, sortable and searchable.
-- **Champion pages**: current numbers and changes; how often the champion is picked or banned, how its games split between roles and how its win rate in the chosen bracket compares with all ranks; win, pick and ban rate charts with dashed lines at patch releases; a matrix of every role and bracket; and its ratings and base stats.
+- **Champion pages**: current numbers and changes; how often the champion is picked or banned, how its games split between roles and how its win rate in the chosen bracket compares with all ranks; win, pick and ban rate charts with dashed lines at patch releases; a matrix of every role and bracket; its ratings and base stats; and its passive, abilities and ultimate, with descriptions, cooldowns, costs and preview videos.
 - **Compare**: up to six champions on one chart, by win rate, pick rate, ban rate or tier score.
 - **Movers**: the biggest win-rate gains and drops over 1, 7 or 30 days, or since the current patch.
 - **Insights**: the most contested champions (picked or banned in the most games), flex picks that play more than one role, and who does better or worse in high elo than across all ranks.
@@ -30,7 +30,7 @@ flowchart LR
 ```
 
 1. `update-data.yml` runs at 02:41 and 14:41 UTC. Tencent publishes the previous day's stats at about 02:00 UTC; the second run is a safety net.
-2. `scripts/fetch-stats.ts` fetches the stats, the champion list and each champion's base stats, validates them and writes `data/snapshots/<date>.json`, `data/champions.json` and `data/base-stats.json`. The date is Tencent's stats date (`dtstatdate`), not the day of the run. Files are only written when their content changes, so a run with nothing new commits nothing. Base stats are best effort: a champion whose file fails to load keeps its previous values, and the run only warns.
+2. `scripts/fetch-stats.ts` fetches the stats, the champion list, each champion's file (base stats, ability cooldowns and costs) and each champion's page on the official Wild Rift site (ability names and descriptions), validates them and writes `data/snapshots/<date>.json`, `data/champions.json`, `data/base-stats.json` and `data/abilities.json`. The date is Tencent's stats date (`dtstatdate`), not the day of the run. Files are only written when their content changes, so a run with nothing new commits nothing. Base stats and abilities are best effort: a champion whose file or page fails to load keeps its previous values, and the run only warns. The run stops asking a source after 8 failures in a row or 4 minutes, so a blocked or stalled source can't hold up the stats.
 3. When data changed, the job commits it as `github-actions[bot]` (`chore(data): add ranked snapshot YYYY-MM-DD`), rebasing before it pushes, and then calls `deploy-pages.yml` to build and deploy that commit. It has to call the deploy directly because pushes made with the workflow's `GITHUB_TOKEN` don't trigger `push` workflows.
 4. `npm run build` first runs `scripts/build-data.ts`, which turns the snapshots into the small files the frontend loads, and then builds the app with Vite.
 
@@ -42,8 +42,9 @@ If the response changes shape (`result` isn't 0, the data is laid out differentl
 | --- | --- |
 | Ranked stats | `https://mlol.qt.qq.com/go/lgame_battle_info/hero_rank_list_v2` |
 | Champion list (Chinese names, icons, lanes, ratings) | `https://game.gtimg.cn/images/lgamem/act/lrlib/js/heroList/hero_list.js` |
-| Base stats, one file per champion | `https://game.gtimg.cn/images/lgamem/act/lrlib/js/hero/<heroId>.js` |
+| Base stats and ability cooldowns and costs, one file per champion | `https://game.gtimg.cn/images/lgamem/act/lrlib/js/hero/<heroId>.js` |
 | English names | Riot Data Dragon `champion.json` |
+| Ability names, descriptions, icons and preview videos | Champion pages on the official Wild Rift site, `https://wildrift.leagueoflegends.com/en-us/champions/<slug>/` |
 
 The stats arrive as `data[rank][lane] = rows`:
 
@@ -66,7 +67,16 @@ What the champion files showed:
 - The champion list rates every champion from 1 to 3 in `difficultyL`, `damage`, `surviveL` and `assistL`. The site calls the last two toughness and utility.
 - Each champion's file has its level 1 stats and their growth per level as separate fields (`hp` and `hpperlevel`, and so on), stored ×10,000 (move speed ×100). Regeneration is per 5 seconds. Champions without mana (23 of 142 in October 2026) report 0, which the site stores as `null`.
 - Level-ups are scaled by multipliers that rise from 0.74 at level 2 to 1.26 at level 15 and average 1, so a stat at level 15 is its level 1 value plus 14 times the per-level value. Tencent doesn't document this; it's inferred from the data.
-- The files also hold attack speed, a critical strike value and each ability's description (in Chinese), cooldowns and costs, which the site doesn't show. They have no attack range.
+- Each file lists five `spells`: the passive, three abilities and the ultimate. Each has a Chinese name and description and the values its tooltip compares when the ability ranks up, as `variTypeN` and `variValueN` pairs: `cd` → `9/8/8/7` for the cooldown, the cost under the name of its `costtype`, and Chinese-labelled values such as `基础伤害` (base damage) → `40/80/120/160`. `cdtime` and `costvalue` only hold the first rank. The site shows the cooldowns and costs. The other values use about 170 different labels, many specific to one champion, so they aren't translated or shown yet.
+- The cost types are mana, health, a percentage of health and `Resource`, which covers energy, fury and other champion-specific resources.
+- The files also hold attack speed and a critical strike value, which the site doesn't show. They have no attack range.
+
+What the official site showed:
+
+- The champion pages are a Next.js app that embeds its content as JSON (`__NEXT_DATA__`, also served at `/_next/data/<buildId>/en-us/champions/<slug>.json`). The fetcher reads the champion list for each page's address and then the abilities block of each page. If a data URL fails, it falls back to the HTML page.
+- In October 2026 the site had a page for all 142 champions in Tencent's list. A champion it doesn't list yet keeps Tencent's Chinese ability names, and the run warns about it.
+- The descriptions explain what an ability does but leave most numbers out. Ability names are inconsistently capitalised, so the site shows them in capitals.
+- Icons and preview videos are linked from Riot's CDN, not copied.
 
 English names come from each champion's poster file name (`.../Posters/Garen_0.jpg` gives `Garen`), matched case-insensitively against Data Dragon ids (`MonkeyKing` is Wukong). Champions Data Dragon doesn't know, such as the Wild Rift–only Norra, use `NAME_OVERRIDES` in `scripts/lib/champions.ts`, and anything left over falls back to splitting the CamelCase key. The fetcher warns in the job summary about every champion without a confident name. If Data Dragon is unreachable, it keeps the names it resolved before.
 
@@ -81,6 +91,7 @@ All rates are stored as **percentages with two decimals**: `51.23` means 51.23%.
 - **History starts on 2026-10-04**, the first day the job ran, and can't be backfilled. Trend charts appear once a role and bracket has three daily snapshots.
 - **Legendary has no data** in Tencent's responses so far.
 - **No builds, items, runes, KDA, matchups, synergies or stats by game length** (early vs late game). None of them are in Tencent's public data, and there's no other public source for Wild Rift.
+- **Ability cooldowns and costs are China-server values** and can differ on other servers. Damage, scaling and other values by rank aren't shown yet.
 - **Tencent can change or remove the endpoint** at any time. The update job then fails loudly, and the site keeps the last good data.
 - Patch dates are maintained by hand (see [Adding a patch](#adding-a-patch)).
 
@@ -122,6 +133,7 @@ Committed by the update job:
 | `data/snapshots/YYYY-MM-DD.json` | One day's stats: `brackets[bracket][lane]` holds `{ heroId, win, pick, ban, strength, strengthLevel }` rows, plus `date`, `fetchedAt` and `source`. About 70 KB a day. |
 | `data/champions.json` | `heroId`, English `name` and `title`, `slug`, Chinese `nameZh`, `avatar` URL, `lanes`, `roles` and Tencent's 1–3 `ratings` (`difficulty`, `damage`, `toughness`, `utility`, or `null` if any is missing) for every champion. |
 | `data/base-stats.json` | The game `version`, the level `growth` multipliers, and each champion's base stats as `[level 1, per level]` pairs: `hp`, `hpRegen`, `mana` and `manaRegen` (`null` without mana), `ad`, `armor` and `mr`, plus `ms`, the move speed, as a single number. About 20 KB. |
+| `data/abilities.json` | Each champion's official `page` slug and its five `abilities` (`slot` `passive`, `1`, `2`, `3` or `ultimate`): English `name`, `description` paragraphs, and `icon` and `video` URLs from the official site, plus Chinese `nameZh`, `cooldown` in seconds per rank and `cost` (`{ type, values }`, per rank) from Tencent. Missing values are `null`. About 500 KB. |
 | `data/patches.json` | Patch versions and release dates for chart markers and the "since patch" Movers window. Edited by hand. |
 
 Built into `public/data/` by `npm run data:build`. These files aren't committed; `npm run dev` and `npm run build` rebuild them.
@@ -132,6 +144,7 @@ Built into `public/data/` by `npm run data:build`. These files aren't committed;
 | `champions.json`, `patches.json` | every page | Trimmed copies of the files above. |
 | `base-stats.json` | Champions and champion pages | A copy of `data/base-stats.json`, with no champions until the first fetch writes that file. |
 | `movers.json` | Movers | Win-rate changes for each window. |
+| `abilities/<heroId>.json` | champion pages | The champion's entry from `data/abilities.json`, about 3.5 KB. Every champion gets a file, with an empty list until abilities are fetched. |
 | `history/<heroId>.json` | champion and Compare pages | The champion's daily `[date, win, pick, ban, score]` points for each bracket and role. Loaded only when needed. A year of daily points is about 65 KB per champion on average (up to about 150 KB for champions played in several roles), or about 17 KB gzipped. |
 
 ## Local development
@@ -153,7 +166,8 @@ The data scripts are TypeScript run directly by Node, and the fetcher only uses 
 ```sh
 npm run fetch                     # fetch live stats and update data/
 npm run fetch -- --dry-run        # fetch and report, write nothing
-npm run fetch -- --no-base-stats  # skip the ~140 per-champion base stats requests
+npm run fetch -- --no-base-stats  # keep the stored base stats
+npm run fetch -- --no-abilities   # keep the stored abilities and skip the official site
 npm run fetch -- --raw-dir .raw   # also keep the raw responses
 npm run fetch:fixtures            # offline dry run against scripts/fixtures/
 npm run data:build                # rebuild public/data/ from data/
@@ -185,7 +199,7 @@ GitHub disables scheduled workflows in public repositories after 60 days without
 
 ## Disclaimer
 
-Wild Rift Stats is an unofficial fan project. It isn't endorsed by Riot Games or Tencent and isn't affiliated with either. League of Legends: Wild Rift and all associated properties are trademarks or registered trademarks of Riot Games, Inc. The data comes from Tencent's public China-server ranked stats.
+Wild Rift Stats is an unofficial fan project. It isn't endorsed by Riot Games or Tencent and isn't affiliated with either. League of Legends: Wild Rift and all associated properties are trademarks or registered trademarks of Riot Games, Inc. The data comes from Tencent's public China-server ranked stats. Ability descriptions, icons and preview videos come from the official Wild Rift site.
 
 ## License
 
