@@ -20,3 +20,55 @@ export async function mapSettled<T, R>(
   await Promise.all(Array.from({ length: workers }, worker))
   return results
 }
+
+/** The error for calls a {@link breaker} refused to start. */
+export class SkippedError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'SkippedError'
+  }
+}
+
+export interface BreakerOptions {
+  /** Refuse new calls once this many calls in a row have failed. */
+  maxConsecutiveFailures: number
+  /** Refuse new calls once this long has passed since the breaker was created. */
+  budgetMs: number
+  now?: () => number
+}
+
+export interface Breaker<A extends unknown[], R> {
+  call: (...args: A) => Promise<R>
+  /** Why the breaker started refusing calls, or null while it still lets them through. */
+  readonly tripped: string | null
+}
+
+/**
+ * Wrap `fn` so a source that is down, blocking us or stalling can't hold up the whole run: after
+ * `maxConsecutiveFailures` failures in a row, or once `budgetMs` has passed, new calls reject with a
+ * SkippedError without running. Calls already in flight still finish.
+ */
+export function breaker<A extends unknown[], R>(fn: (...args: A) => Promise<R>, options: BreakerOptions): Breaker<A, R> {
+  const { maxConsecutiveFailures, budgetMs, now = Date.now } = options
+  const deadline = now() + budgetMs
+  let failuresInARow = 0
+  let tripped: string | null = null
+  return {
+    get tripped() {
+      return tripped
+    },
+    async call(...args: A): Promise<R> {
+      if (tripped === null && failuresInARow >= maxConsecutiveFailures) tripped = `${failuresInARow} failures in a row`
+      if (tripped === null && now() >= deadline) tripped = `took longer than ${Math.round(budgetMs / 1000)} s`
+      if (tripped !== null) throw new SkippedError(`Skipped: ${tripped}`)
+      try {
+        const result = await fn(...args)
+        failuresInARow = 0
+        return result
+      } catch (error) {
+        failuresInARow++
+        throw error
+      }
+    },
+  }
+}

@@ -1,0 +1,273 @@
+{
+  "props": {
+    "pageProps": {
+      "page": {
+        "locale": "en-us",
+        "url": "https://wildrift.leagueoflegends.com/en-us/champions/garen/",
+        "title": "GAREN",
+        "type": "wildriftChampion",
+        "blades": [
+          {
+            "type": "riotbar",
+            "productId": "wildrift-cb3"
+          },
+          {
+            "palette": "palette2",
+            "title": "GAREN",
+            "subtitle": "the Might of Demacia",
+            "role": {
+              "label": "Role",
+              "roles": [
+                {
+                  "id": "fighter",
+                  "name": "FIGHTER"
+                },
+                {
+                  "id": "tank",
+                  "name": "TANK"
+                }
+              ]
+            },
+            "difficulty": {
+              "label": "Difficulty",
+              "name": "Low",
+              "value": 1,
+              "maxValue": 3
+            },
+            "type": "characterMasthead"
+          },
+          {
+            "layout": "arNativeBordered",
+            "palette": "palette2",
+            "header": {
+              "title": "ABILITIES"
+            },
+            "groups": [
+              {
+                "label": "Perseverance",
+                "thumbnail": {
+                  "type": "image",
+                  "provider": "sanity",
+                  "url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/news/3e3d2e20a694c5ac12f1957dbfa7f56cfe4fd5b3-96x96.jpg?accountingTag=WR",
+                  "dimensions": {
+                    "width": 96,
+                    "height": 96,
+                    "aspectRatio": 1
+                  },
+                  "colors": {
+                    "primary": "#0C1918",
+                    "secondary": "#E9FFD6",
+                    "label": "#010101"
+                  },
+                  "mimeType": "image/jpeg"
+                },
+                "content": {
+                  "media": {
+                    "type": "video",
+                    "provider": "sanity",
+                    "dimensions": {
+                      "width": 1600,
+                      "height": 900
+                    },
+                    "sources": [
+                      {
+                        "src": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data/1dfe4e239a0a1c9abb4fd49343db890d41559508.mp4?accountingTag=WR",
+                        "type": "video/mp4"
+                      }
+                    ]
+                  },
+                  "title": "Perseverance",
+                  "subtitle": "PASSIVE",
+                  "description": {
+                    "type": "html",
+                    "body": "If Garen has not recently been struck by damage or enemy abilities, he regenerates a percentage of his total health each second."
+                  }
+                }
+              },
+              {
+                "label": "Decisive Strike",
+                "thumbnail": {
+                  "type": "image",
+                  "provider": "sanity",
+                  "url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/news/01de0141e9db61e06c10dbc6f946650ddcc4476a-96x96.jpg?accountingTag=WR",
+                  "dimensions": {
+                    "width": 96,
+                    "height": 96,
+                    "aspectRatio": 1
+                  },
+                  "colors": {
+                    "primary": "#5B402E",
+                    "secondary": "#F9EEDC",
+                    "label": "#341D0D"
+                  },
+                  "mimeType": "image/jpeg"
+                },
+                "content": {
+                  "media": {
+                    "type": "video",
+                    "provider": "sanity",
+                    "dimensions": {
+                      "width": 1600,
+                      "height": 900
+                    },
+                    "sources": [
+                      {
+                        "src": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data/ad8ef0749c1dcf3d65c76ca8d4e354a2125aa162.mp4?accountingTag=WR",
+                        "type": "video/mp4"
+                      }
+                    ]
+                  },
+                  "title": "Decisive Strike",
+                  "subtitle": "1",
+                  "description": {
+                    "type": "html",
+                    "body": "Garen gains a burst of movement speed, breaking free of all slows affecting him. His next attack strikes a vital area of his foe, dealing bonus damage and silencing them."
+                  }
+                }
+              },
+              {
+                "label": "Courage",
+                "thumbnail": {
+                  "type": "image",
+                  "provider": "sanity",
+                  "url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/news/f6839d73df499cc863d2b28c56b1004ac0a9c065-96x96.jpg?accountingTag=WR",
+                  "dimensions": {
+                    "width": 96,
+                    "height": 96,
+                    "aspectRatio": 1
+                  },
+                  "colors": {
+                    "primary": "#1D203A",
+                    "secondary": "#F9EEDC",
+                    "label": "#03040C"
+                  },
+                  "mimeType": "image/jpeg"
+                },
+                "content": {
+                  "media": {
+                    "type": "video",
+                    "provider": "sanity",
+                    "dimensions": {
+                      "width": 1600,
+                      "height": 900
+                    },
+                    "sources": [
+                      {
+                        "src": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data/b41a2c31801299ae469854f30f0bcbe20eaa0f44.mp4?accountingTag=WR",
+                        "type": "video/mp4"
+                      }
+                    ]
+                  },
+                  "title": "Courage",
+                  "subtitle": "2",
+                  "description": {
+                    "type": "html",
+                    "body": "Garen reduces damage taken for a short time, and gains bonus resistance to crowd control."
+                  }
+                }
+              },
+              {
+                "label": "Judgment",
+                "thumbnail": {
+                  "type": "image",
+                  "provider": "sanity",
+                  "url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/news_live/83cf33a4625f25572a6efab310576e03d32024a4-96x96.jpg?accountingTag=WR",
+                  "dimensions": {
+                    "width": 96,
+                    "height": 96,
+                    "aspectRatio": 1
+                  },
+                  "colors": {
+                    "primary": "#5F422F",
+                    "secondary": "#F9F1DC",
+                    "label": "#391F0E"
+                  },
+                  "mimeType": "image/jpeg"
+                },
+                "content": {
+                  "media": {
+                    "type": "video",
+                    "provider": "sanity",
+                    "dimensions": {
+                      "width": 1600,
+                      "height": 900
+                    },
+                    "sources": [
+                      {
+                        "src": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data/da6881b12074e91611385d95646190d477ed700a.mp4?accountingTag=WR",
+                        "type": "video/mp4"
+                      }
+                    ]
+                  },
+                  "title": "Judgment",
+                  "subtitle": "3",
+                  "description": {
+                    "type": "html",
+                    "body": "Garen rapidly spins his sword around his body, dealing physical damage to nearby enemies. Enemies hit by the bladestorm's edge are critically struck."
+                  }
+                }
+              },
+              {
+                "label": "Demacian Justice",
+                "thumbnail": {
+                  "type": "image",
+                  "provider": "sanity",
+                  "url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/news_live/27bc2e231bc65fdb9d6e7edf0fa20327a3d221ca-96x96.jpg?accountingTag=WR",
+                  "dimensions": {
+                    "width": 96,
+                    "height": 96,
+                    "aspectRatio": 1
+                  },
+                  "colors": {
+                    "primary": "#B89962",
+                    "secondary": "#332B29",
+                    "label": "#2B2417"
+                  },
+                  "mimeType": "image/jpeg"
+                },
+                "content": {
+                  "media": {
+                    "type": "video",
+                    "provider": "sanity",
+                    "dimensions": {
+                      "width": 1600,
+                      "height": 900
+                    },
+                    "sources": [
+                      {
+                        "src": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data/40ea348bc391e67d432e8a5c4af677ac23ab9cec.mp4?accountingTag=WR",
+                        "type": "video/mp4"
+                      }
+                    ]
+                  },
+                  "title": "Demacian Justice",
+                  "subtitle": "ULTIMATE",
+                  "description": {
+                    "type": "html",
+                    "body": "Garen calls upon the might of Demacia to attempt to execute an enemy champion, dealing damage in an area around his target."
+                  }
+                }
+              }
+            ],
+            "type": "iconTab"
+          },
+          {
+            "layout": "arNative",
+            "header": {
+              "title": "Available Skins"
+            },
+            "groups": [
+              {
+                "label": "GAREN, THE MIGHT OF DEMACIA"
+              }
+            ],
+            "type": "landingMediaCarousel"
+          }
+        ]
+      }
+    }
+  },
+  "page": "/[[...pathArray]]",
+  "buildId": "Y4OR6rBZJdkHMNuLoK2Pi",
+  "locale": "en-us"
+}

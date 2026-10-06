@@ -4,7 +4,7 @@
  * Units: every `win`, `pick` and `ban` value is a percentage (0–100) rounded to 2 decimals.
  * Deltas (`dWin` etc.) are differences in percentage points.
  */
-import type { Bracket, Lane } from './constants.ts'
+import type { AbilitySlot, Bracket, Lane } from './constants.ts'
 
 export type LaneTable<T> = Partial<Record<Lane, T[]>>
 export type BracketTable<T> = Partial<Record<Bracket, LaneTable<T>>>
@@ -120,6 +120,48 @@ export interface BaseStatsFile {
   champions: BaseStats[]
 }
 
+/** Resource an ability spends. `resource` is Tencent's generic type (energy, fury, …). */
+export type AbilityCostType = 'mana' | 'health' | 'health%' | 'resource'
+
+export interface AbilityCost {
+  type: AbilityCostType
+  /** Cost per ability rank; `health%` values are percentages of health. */
+  values: number[]
+}
+
+export interface ChampionAbility {
+  slot: AbilitySlot
+  /** English name from the official Wild Rift site, null when unknown. */
+  name: string | null
+  /** English description paragraphs (plain text), empty when unknown. */
+  description: string[]
+  /** Icon from the official site. */
+  icon: string | null
+  /** Preview video (mp4) from the official site. */
+  video: string | null
+  /** Chinese name from Tencent's champion file. */
+  nameZh: string | null
+  /** Cooldown in seconds per rank (Tencent, CN server); null when there's none. */
+  cooldown: number[] | null
+  /** Cost per rank (Tencent, CN server); null when the ability is free. */
+  cost: AbilityCost | null
+}
+
+export interface ChampionAbilities {
+  heroId: number
+  /** Slug of the champion's page on the official site, e.g. "nunu-and-willump". */
+  page: string | null
+  /** Passive, 1, 2, 3 and ultimate, in that order. */
+  abilities: ChampionAbility[]
+}
+
+/** data/abilities.json */
+export interface AbilitiesFile {
+  schema: 1
+  /** Sorted by heroId. */
+  champions: ChampionAbilities[]
+}
+
 /* ------------------------------------------------------------------ */
 /* Derived files, generated into public/data/ by `npm run data:build`  */
 /* ------------------------------------------------------------------ */
@@ -176,6 +218,11 @@ export interface HistoryFile {
   schema: 1
   heroId: number
   series: BracketTable<HistoryPoint>
+}
+
+/** public/data/abilities/<heroId>.json; `abilities` is empty when none are known. */
+export interface PublicAbilitiesFile extends ChampionAbilities {
+  schema: 1
 }
 
 export type MoverWindowId = '1d' | '7d' | '30d' | 'patch'

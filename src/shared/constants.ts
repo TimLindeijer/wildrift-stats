@@ -34,6 +34,21 @@ export const LANE_LABELS: Record<Lane, string> = {
   support: 'Support',
 }
 
+/** A champion's abilities in display order. */
+export const ABILITY_SLOTS = ['passive', '1', '2', '3', 'ultimate'] as const
+export type AbilitySlot = (typeof ABILITY_SLOTS)[number]
+
+export const ABILITY_SLOT_LABELS: Record<AbilitySlot, string> = {
+  passive: 'Passive',
+  '1': 'Ability 1',
+  '2': 'Ability 2',
+  '3': 'Ability 3',
+  ultimate: 'Ultimate',
+}
+
+/** Champion pages on the official Wild Rift site, e.g. `${OFFICIAL_CHAMPIONS_URL}garen/`. */
+export const OFFICIAL_CHAMPIONS_URL = 'https://wildrift.leagueoflegends.com/en-us/champions/'
+
 export function isBracket(value: unknown): value is Bracket {
   return typeof value === 'string' && (BRACKETS as readonly string[]).includes(value)
 }

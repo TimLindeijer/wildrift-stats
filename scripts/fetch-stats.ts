@@ -1,38 +1,58 @@
 /**
  * Fetch today's Wild Rift ranked stats (China server) and store them as a dated snapshot.
  *
- *   node scripts/fetch-stats.ts [--data-dir data] [--raw-dir .raw] [--dry-run] [--no-base-stats]
+ *   node scripts/fetch-stats.ts [--data-dir data] [--raw-dir .raw] [--dry-run] [--no-base-stats] [--no-abilities]
  *   node scripts/fetch-stats.ts --stats-file x.json --heroes-file y.json --ddragon-file z.json \
- *     --hero-details-dir dir/   # offline
+ *     --hero-details-dir dir/ --official-dir dir/   # offline
  *
- * Writes data/snapshots/<dtstatdate>.json (only when the stats changed), data/champions.json and
- * data/base-stats.json (only when they changed), so a scheduled run that finds nothing new leaves
- * the tree untouched. Base stats are best effort: champions whose file can't be loaded keep their
- * previous values and the run only warns.
+ * Writes data/snapshots/<dtstatdate>.json (only when the stats changed), and data/champions.json,
+ * data/base-stats.json and data/abilities.json (only when they changed), so a scheduled run that
+ * finds nothing new leaves the tree untouched. Base stats and abilities are best effort: champions
+ * whose files can't be loaded keep their previous values and the run only warns.
+ *
+ * Abilities combine Tencent's champion files (cooldowns, costs) with the official Wild Rift site
+ * (English names, descriptions, icons, videos); --official-dir reads the site's page JSON from
+ * <slug>.json files and the champion list from champions.json instead.
  */
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import { parseArgs } from 'node:util'
-import type { BaseStatsFile, ChampionsFile, Patch } from '../src/shared/types.ts'
+import type { AbilitiesFile, BaseStatsFile, Champion, ChampionsFile, Patch } from '../src/shared/types.ts'
+import {
+  extractNextData,
+  hasEnglishText,
+  matchOfficialPages,
+  mergeAbilities,
+  OFFICIAL_HEADERS,
+  OFFICIAL_LIST_URL,
+  officialDataUrl,
+  officialPageUrl,
+  parseAbilitiesFile,
+  parseOfficialAbilities,
+  parseOfficialList,
+  type OfficialAbility,
+  type OfficialList,
+  type OfficialPage,
+} from './lib/abilities.ts'
 import { appendSummary, error as reportError, setOutput, warn } from './lib/actions.ts'
-import { mapSettled } from './lib/async.ts'
+import { breaker, mapSettled, SkippedError } from './lib/async.ts'
 import { mergeBaseStats, parseBaseStats } from './lib/baseStats.ts'
 import { buildChampions, indexDataDragon, type DataDragonIndex } from './lib/champions.ts'
 import { listFiles, readJsonFile, readTextFile, writeIfChanged } from './lib/fs.ts'
 import { describeError, fetchJson, fetchText, parseJsonText } from './lib/http.ts'
 import { formatJson } from './lib/json.ts'
-import { renderReport, type BaseStatsStatus } from './lib/report.ts'
+import { renderReport, type FileStatus } from './lib/report.ts'
 import { buildSnapshot, isSnapshot, snapshotFileName, snapshotStatus } from './lib/snapshot.ts'
 import {
   HERO_LIST_URL,
   heroDetailUrl,
   parseHeroDetail,
   parseHeroList,
+  parseHeroSpells,
   parseRankList,
   SchemaError,
   STATS_URL,
   TENCENT_HEADERS,
-  type ParsedHeroDetail,
 } from './lib/tencent.ts'
 
 const DDRAGON_VERSIONS_URL = 'https://ddragon.leagueoflegends.com/api/versions.json'
@@ -40,6 +60,14 @@ const ddragonChampionUrl = (version: string) =>
   `https://ddragon.leagueoflegends.com/cdn/${version}/data/en_US/champion.json`
 /** Parallel requests for the ~140 champion files on Tencent's CDN. */
 const DETAIL_CONCURRENCY = 6
+/** Parallel requests for the ~140 champion pages on the official site. */
+const OFFICIAL_CONCURRENCY = 4
+/**
+ * The champion files and the official site are best effort. Each source stops being asked after this
+ * many failures in a row or this long, so a source that blocks or stalls the runner costs a few
+ * minutes at most and can't push the run past the workflow's 15-minute timeout.
+ */
+const SOURCE_LIMITS = { maxConsecutiveFailures: 8, budgetMs: 4 * 60_000 }
 
 const { values: args } = parseArgs({
   options: {
@@ -49,8 +77,10 @@ const { values: args } = parseArgs({
     'heroes-file': { type: 'string' },
     'ddragon-file': { type: 'string' },
     'hero-details-dir': { type: 'string' },
+    'official-dir': { type: 'string' },
     'no-ddragon': { type: 'boolean', default: false },
     'no-base-stats': { type: 'boolean', default: false },
+    'no-abilities': { type: 'boolean', default: false },
     'dry-run': { type: 'boolean', default: false },
   },
   strict: true,
@@ -97,20 +127,90 @@ async function latestStoredDate(): Promise<string | null> {
   return dates.at(-1) ?? null
 }
 
-async function loadHeroDetail(heroId: number): Promise<ParsedHeroDetail> {
+/** One champion's raw file from Tencent's CDN (or --hero-details-dir). */
+async function loadHeroFile(heroId: number): Promise<unknown> {
   const dir = args['hero-details-dir']
-  if (!dir) return parseHeroDetail(await fetchJson(heroDetailUrl(heroId), { headers: TENCENT_HEADERS, retries: 2, log }), heroId)
+  if (!dir) return fetchJson(heroDetailUrl(heroId), { headers: TENCENT_HEADERS, retries: 2, log })
   const text = await readTextFile(join(dir, `${heroId}.json`)).catch(() => readTextFile(join(dir, `${heroId}.js`)))
-  return parseHeroDetail(parseJsonText(text, `champion file ${heroId}`), heroId)
+  return parseJsonText(text, `champion file ${heroId}`)
+}
+
+/** Load every champion's file once, for base stats and abilities. Never throws for a single champion. */
+async function loadHeroFiles(heroIds: readonly number[], warnings: string[]): Promise<Map<number, unknown>> {
+  const guarded = breaker(loadHeroFile, SOURCE_LIMITS)
+  const results = await mapSettled(heroIds, DETAIL_CONCURRENCY, (heroId) => guarded.call(heroId))
+  const files = new Map<number, unknown>()
+  const failed: number[] = []
+  let skipped = 0
+  let firstError: unknown
+  results.forEach((result, index) => {
+    const heroId = heroIds[index] as number
+    if (result.status === 'fulfilled') {
+      files.set(heroId, result.value)
+    } else if (result.reason instanceof SkippedError) {
+      skipped++
+    } else {
+      failed.push(heroId)
+      firstError ??= result.reason
+    }
+  })
+  if (failed.length > 0) {
+    warnings.push(
+      `Couldn't load ${failed.length} of ${heroIds.length} champion files (previous base stats and abilities kept): ` +
+        `${failed.join(', ')}. First error: ${describeError(firstError)}`,
+    )
+  }
+  if (guarded.tripped !== null) {
+    warnings.push(
+      `Stopped loading champion files early (${guarded.tripped}); ${skipped} more champions keep their previous base stats and abilities`,
+    )
+  }
+  log(`Champion files: ${files.size}/${heroIds.length} loaded`)
+  return files
+}
+
+/** Parse each loaded champion file; files that don't parse are skipped with one warning. */
+function parseEach<T>(
+  files: ReadonlyMap<number, unknown>,
+  parse: (json: unknown, heroId: number) => T,
+  what: string,
+  warnings: string[],
+): Map<number, T> {
+  const parsed = new Map<number, T>()
+  const failed: number[] = []
+  let firstError: unknown
+  for (const [heroId, json] of files) {
+    try {
+      parsed.set(heroId, parse(json, heroId))
+    } catch (error) {
+      failed.push(heroId)
+      firstError ??= error
+    }
+  }
+  if (failed.length > 0) {
+    warnings.push(
+      `Couldn't read ${what} for ${failed.length} of ${files.size} champions (previous values kept): ` +
+        `${failed.join(', ')}. First error: ${describeError(firstError)}`,
+    )
+  }
+  return parsed
+}
+
+async function writeDataFile(path: string, json: string): Promise<boolean> {
+  return dryRun ? (await readTextFile(path).catch(() => '')) !== json : writeIfChanged(path, json)
 }
 
 interface BaseStatsResult {
-  status: BaseStatsStatus
+  status: FileStatus
   file: BaseStatsFile | null
 }
 
-/** Refresh data/base-stats.json from each champion's file. Never throws for a single champion. */
-async function updateBaseStats(heroIds: readonly number[], warnings: string[]): Promise<BaseStatsResult> {
+/** Refresh data/base-stats.json from the champion files. */
+async function updateBaseStats(
+  files: ReadonlyMap<number, unknown>,
+  heroCount: number,
+  warnings: string[],
+): Promise<BaseStatsResult> {
   if (args['no-base-stats']) return { status: 'skipped', file: null }
 
   const path = join(dataDir, 'base-stats.json')
@@ -122,33 +222,131 @@ async function updateBaseStats(heroIds: readonly number[], warnings: string[]): 
     warnings.push(`Ignoring invalid data/base-stats.json (${describeError(error)}); rebuilding it`)
   }
 
-  const results = await mapSettled(heroIds, DETAIL_CONCURRENCY, loadHeroDetail)
-  const details: ParsedHeroDetail[] = []
-  const failed: number[] = []
+  const details = parseEach(files, parseHeroDetail, 'base stats', warnings)
+  const merged = mergeBaseStats([...details.values()], previous)
+  warnings.push(...merged.warnings)
+  const changed = await writeDataFile(path, formatJson(merged.file, 160))
+  log(`Base stats: ${details.size}/${heroCount} champions read; base-stats.json ${changed ? 'changed' : 'unchanged'}`)
+  return { status: changed ? 'changed' : 'unchanged', file: merged.file }
+}
+
+async function loadOfficialList(warnings: string[]): Promise<OfficialList | null> {
+  const dir = args['official-dir']
+  try {
+    const json = dir
+      ? parseJsonText(await readTextFile(join(dir, 'champions.json')), 'official champion list')
+      : extractNextData(await fetchText(OFFICIAL_LIST_URL, { headers: OFFICIAL_HEADERS, retries: 2, log }))
+    return parseOfficialList(json)
+  } catch (error) {
+    warnings.push(`Couldn't load the official champion list (${describeError(error)}); guessing page addresses from names`)
+    return null
+  }
+}
+
+/**
+ * One champion's abilities from the official site: the page's `_next/data` JSON while the build id
+ * works, else the HTML page. A new deployment of the site retires the build id mid-run, so once the
+ * HTML works where the JSON didn't, the remaining pages skip the JSON.
+ */
+async function loadOfficialPage(slug: string, route: { buildId: string | null }): Promise<OfficialAbility[]> {
+  const dir = args['official-dir']
+  if (dir) return parseOfficialAbilities(parseJsonText(await readTextFile(join(dir, `${slug}.json`)), `official page ${slug}`))
+  const { buildId } = route
+  if (buildId) {
+    try {
+      return parseOfficialAbilities(await fetchJson(officialDataUrl(buildId, slug), { headers: OFFICIAL_HEADERS, retries: 1, log }))
+    } catch {
+      // Try the HTML page below.
+    }
+  }
+  const abilities = parseOfficialAbilities(
+    extractNextData(await fetchText(officialPageUrl(slug), { headers: OFFICIAL_HEADERS, retries: 2, log })),
+  )
+  if (buildId && route.buildId === buildId) {
+    route.buildId = null
+    log(`The official site's data route failed for ${slug} but the page loaded; using HTML pages from now on`)
+  }
+  return abilities
+}
+
+/**
+ * English ability text for every champion on the official site. When the champion list loads, only
+ * listed champions are requested; champions the site doesn't have yet are reported by the caller.
+ */
+async function loadOfficialAbilities(champions: readonly Champion[], warnings: string[]): Promise<Map<number, OfficialPage>> {
+  const list = await loadOfficialList(warnings)
+  const targets = matchOfficialPages(champions, list).filter((match) => match.listed || list === null)
+  const route = { buildId: list?.buildId ?? null }
+  const guarded = breaker((slug: string) => loadOfficialPage(slug, route), SOURCE_LIMITS)
+  const results = await mapSettled(targets, OFFICIAL_CONCURRENCY, (match) => guarded.call(match.slug))
+
+  const names = new Map(champions.map((champion) => [champion.heroId, champion.name]))
+  const pages = new Map<number, OfficialPage>()
+  const failed: string[] = []
+  let skipped = 0
   let firstError: unknown
   results.forEach((result, index) => {
+    const { heroId, slug } = targets[index] as (typeof targets)[number]
     if (result.status === 'fulfilled') {
-      details.push(result.value)
+      pages.set(heroId, { page: slug, abilities: result.value })
+    } else if (result.reason instanceof SkippedError) {
+      skipped++
     } else {
-      failed.push(heroIds[index] as number)
+      failed.push(names.get(heroId) ?? String(heroId))
       firstError ??= result.reason
     }
   })
   if (failed.length > 0) {
     warnings.push(
-      `Couldn't load base stats for ${failed.length} of ${heroIds.length} champions (previous values kept): ` +
+      `Couldn't load official ability text for ${failed.length} of ${targets.length} champions (previous text kept): ` +
         `${failed.join(', ')}. First error: ${describeError(firstError)}`,
     )
   }
+  if (guarded.tripped !== null) {
+    warnings.push(`Stopped loading the official site early (${guarded.tripped}); ${skipped} more champions keep their previous text`)
+  }
+  return pages
+}
 
-  const merged = mergeBaseStats(details, previous)
-  warnings.push(...merged.warnings)
-  const json = formatJson(merged.file, 160)
-  const changed = dryRun
-    ? (await readTextFile(path).catch(() => '')) !== json
-    : await writeIfChanged(path, json)
-  log(`Base stats: ${details.length}/${heroIds.length} champion files loaded; base-stats.json ${changed ? 'changed' : 'unchanged'}`)
-  return { status: changed ? 'changed' : 'unchanged', file: merged.file }
+interface AbilitiesResult {
+  status: FileStatus
+  file: AbilitiesFile | null
+}
+
+/** Refresh data/abilities.json from the champion files and the official site. */
+async function updateAbilities(
+  champions: readonly Champion[],
+  files: ReadonlyMap<number, unknown>,
+  warnings: string[],
+): Promise<AbilitiesResult> {
+  if (args['no-abilities']) return { status: 'skipped', file: null }
+
+  const path = join(dataDir, 'abilities.json')
+  let previous: AbilitiesFile | null = null
+  try {
+    const value = await readJsonFile(path)
+    if (value !== undefined) previous = parseAbilitiesFile(value)
+  } catch (error) {
+    warnings.push(`Ignoring invalid data/abilities.json (${describeError(error)}); rebuilding it`)
+  }
+
+  const spells = parseEach(files, parseHeroSpells, 'cooldowns and costs', warnings)
+  const official = await loadOfficialAbilities(champions, warnings)
+  const file = mergeAbilities({ previous, official, spells })
+  const byId = new Map(file.champions.map((entry) => [entry.heroId, entry]))
+  const missing = champions.filter((champion) => !hasEnglishText(byId.get(champion.heroId)))
+  if (missing.length > 0) {
+    warnings.push(
+      `No English ability text for ${missing.length} champions (not on the official site yet?): ` +
+        missing.map((champion) => champion.name).join(', '),
+    )
+  }
+  const changed = await writeDataFile(path, formatJson(file, 160))
+  log(
+    `Abilities: official text for ${official.size}/${champions.length} champions, cooldowns and costs for ` +
+      `${spells.size}; abilities.json ${changed ? 'changed' : 'unchanged'}`,
+  )
+  return { status: changed ? 'changed' : 'unchanged', file }
 }
 
 async function main(): Promise<void> {
@@ -203,10 +401,11 @@ async function main(): Promise<void> {
     if (status !== 'unchanged') await writeIfChanged(snapshotPath, formatJson(snapshot))
     championsChanged = await writeIfChanged(championsPath, championsJson)
   }
-  const baseStats = await updateBaseStats(
-    heroList.heroes.map((hero) => hero.heroId),
-    warnings,
-  )
+  const heroIds = heroList.heroes.map((hero) => hero.heroId)
+  const needFiles = !args['no-base-stats'] || !args['no-abilities']
+  const heroFiles = needFiles ? await loadHeroFiles(heroIds, warnings) : new Map<number, unknown>()
+  const baseStats = await updateBaseStats(heroFiles, heroIds.length, warnings)
+  const abilities = await updateAbilities(champions, heroFiles, warnings)
 
   for (const message of warnings) warn(message)
   log(
@@ -222,6 +421,8 @@ async function main(): Promise<void> {
   await setOutput('snapshot', status)
   await setOutput('champions', championsChanged ? 'changed' : 'unchanged')
   await setOutput('base_stats', baseStats.status)
+  await setOutput('abilities', abilities.status)
+  const abilityEntries = abilities.file?.champions ?? []
   await appendSummary(
     renderReport({
       snapshot,
@@ -232,6 +433,14 @@ async function main(): Promise<void> {
         status: baseStats.status,
         championCount: baseStats.file?.champions.length ?? 0,
         version: baseStats.file?.version ?? null,
+      },
+      abilities: {
+        status: abilities.status,
+        championCount: abilityEntries.length,
+        withText: abilityEntries.filter(hasEnglishText).length,
+        withNumbers: abilityEntries.filter((entry) =>
+          entry.abilities.some((ability) => ability.cooldown !== null || ability.cost !== null),
+        ).length,
       },
       summary: parsed.summary,
       warnings,

@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import type { HistoryFile, LatestFile, MoversFile, PublicChampionsFile } from '../src/shared/types.ts'
+import type { HistoryFile, LatestFile, MoversFile, PublicAbilitiesFile, PublicChampionsFile } from '../src/shared/types.ts'
 
 const script = fileURLToPath(new URL('./build-data.ts', import.meta.url))
 
@@ -37,6 +37,21 @@ const champion = (heroId: number, name: string) => ({
   roles: ['Mage'],
 })
 
+const abilities = (heroId: number, page: string) => ({
+  heroId,
+  page,
+  abilities: ['passive', '1', '2', '3', 'ultimate'].map((slot) => ({
+    slot,
+    name: `Ability ${slot}`,
+    description: ['Does things.'],
+    icon: null,
+    video: null,
+    nameZh: null,
+    cooldown: slot === 'passive' ? null : [10, 9],
+    cost: null,
+  })),
+})
+
 describe('build-data CLI', () => {
   let dir: string
 
@@ -66,9 +81,14 @@ describe('build-data CLI', () => {
     })
   const read = async <T,>(path: string) => JSON.parse(await readFile(join(dir, 'out', path), 'utf8')) as T
 
-  it('writes latest, movers, histories and copies of the reference data', async () => {
+  it('writes latest, movers, histories, abilities and copies of the reference data', async () => {
     await mkdir(join(dir, 'out', 'history'), { recursive: true })
     await writeFile(join(dir, 'out', 'history', 'stale.json'), '{}')
+    // Hero 99 isn't in champions.json, so it gets no file.
+    await writeFile(
+      join(dir, 'data', 'abilities.json'),
+      JSON.stringify({ schema: 1, champions: [abilities(1, 'ahri'), abilities(99, 'gone')] }),
+    )
 
     expect(run()).toMatch(/from 2 snapshot\(s\), 2026-10-01 to 2026-10-02/)
 
@@ -86,6 +106,13 @@ describe('build-data CLI', () => {
     const history = await read<HistoryFile>('history/1.json')
     expect(history.series.all?.mid?.map((point) => point[0])).toEqual(['2026-10-01', '2026-10-02'])
     expect(await read<HistoryFile>('history/3.json')).toEqual({ schema: 1, heroId: 3, series: {} })
+
+    expect((await readdir(join(dir, 'out', 'abilities'))).sort()).toEqual(['1.json', '2.json', '3.json'])
+    const ahri = await read<PublicAbilitiesFile>('abilities/1.json')
+    expect(ahri).toMatchObject({ schema: 1, heroId: 1, page: 'ahri' })
+    expect(ahri.abilities.map((ability) => ability.slot)).toEqual(['passive', '1', '2', '3', 'ultimate'])
+    expect(ahri.abilities[1]).toMatchObject({ name: 'Ability 1', cooldown: [10, 9] })
+    expect(await read<PublicAbilitiesFile>('abilities/3.json')).toEqual({ schema: 1, heroId: 3, page: null, abilities: [] })
   }, 30_000)
 
   it('fails when a snapshot file name does not match its date', async () => {

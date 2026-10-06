@@ -3,7 +3,15 @@
  * Everything here throws SchemaError on unexpected shapes so the scheduled job fails loudly.
  */
 import { BRACKETS, LANES, type Bracket, type Lane } from '../../src/shared/constants.ts'
-import type { BaseStats, BracketTable, ChampionRatings, SnapshotRow, StatGrowth } from '../../src/shared/types.ts'
+import type {
+  AbilityCost,
+  AbilityCostType,
+  BaseStats,
+  BracketTable,
+  ChampionRatings,
+  SnapshotRow,
+  StatGrowth,
+} from '../../src/shared/types.ts'
 
 export const STATS_URL = 'https://mlol.qt.qq.com/go/lgame_battle_info/hero_rank_list_v2'
 export const HERO_LIST_URL = 'https://game.gtimg.cn/images/lgamem/act/lrlib/js/heroList/hero_list.js'
@@ -14,9 +22,11 @@ export const STATS_SOURCE = 'tencent:hero_rank_list_v2'
 export const heroDetailUrl = (heroId: number): string =>
   `https://game.gtimg.cn/images/lgamem/act/lrlib/js/hero/${heroId}.js`
 
+export const BROWSER_USER_AGENT =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'
+
 export const TENCENT_HEADERS: Record<string, string> = {
-  'User-Agent':
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+  'User-Agent': BROWSER_USER_AGENT,
   Referer: 'https://lolm.qq.com/',
 }
 
@@ -360,4 +370,98 @@ export function parseHeroDetail(json: unknown, expectedHeroId?: number): ParsedH
   })
 
   return { stats, growth, version: typeof json.version === 'string' ? json.version : null }
+}
+
+/** Tencent's `costtype` → our cost type; null for abilities that cost nothing. */
+export const SPELL_COST_TYPES: Readonly<Record<string, AbilityCostType | null>> = {
+  None: null,
+  MP: 'mana',
+  HP: 'health',
+  HPPer: 'health%',
+  Resource: 'resource',
+}
+
+/** A champion file lists the passive, the three abilities and the ultimate, in that order. */
+export const SPELL_COUNT = 5
+
+export interface ParsedSpell {
+  /** Chinese name, null when empty. */
+  nameZh: string | null
+  /** Seconds per rank; null without a cooldown. */
+  cooldown: number[] | null
+  cost: AbilityCost | null
+}
+
+/** A spell's `variTypeN` → `variValueN` pairs ("cd" → "9/8/8/7"); the lowest N wins. */
+function spellVariables(spell: JsonObject): Map<string, string> {
+  const pairs: [index: number, type: string, value: string][] = []
+  for (const [key, type] of Object.entries(spell)) {
+    const index = /^variType(\d+)$/.exec(key)?.[1]
+    if (index === undefined || typeof type !== 'string' || type === '') continue
+    const value = spell[`variValue${index}`]
+    if (typeof value === 'string') pairs.push([Number(index), type, value])
+  }
+  pairs.sort((a, b) => a[0] - b[0])
+  const variables = new Map<string, string>()
+  for (const [, type, value] of pairs) if (!variables.has(type)) variables.set(type, value)
+  return variables
+}
+
+/** "9/8/8/7" → [9, 8, 8, 7] (2 decimals); null when every rank is 0. */
+function perRank(text: string, path: string, scale = 1): number[] | null {
+  const values = text.split('/').map((part, index) => {
+    const value = toFiniteNumber(part.trim(), `${path} rank ${index + 1}`)
+    if (value < 0) throw new SchemaError(`${path} is negative: ${JSON.stringify(text)}`)
+    return Math.round(value * scale * 100) / 100
+  })
+  return values.every((value) => value === 0) ? null : values
+}
+
+/**
+ * The abilities in one champion file (`spells`: passive, abilities 1–3, ultimate). Cooldowns and
+ * costs come from the per-rank values ("9/8/8/7") of the `cd` variable and of the variable named
+ * after `costtype`; `cdtime` and `costvalue` only hold the first rank. `HPPer` costs are fractions
+ * of health and become percentages.
+ */
+export function parseHeroSpells(json: unknown, expectedHeroId?: number): ParsedSpell[] {
+  if (!isObject(json) || !isObject(json.hero)) throw new SchemaError('Champion file has no "hero" object')
+  const heroId = toHeroId(json.hero.heroId, 'hero.heroId')
+  if (expectedHeroId !== undefined && heroId !== expectedHeroId) {
+    throw new SchemaError(`Champion file for ${expectedHeroId} describes hero ${heroId}`)
+  }
+  const { spells } = json
+  if (!Array.isArray(spells) || spells.length !== SPELL_COUNT) {
+    const count = Array.isArray(spells) ? spells.length : 'no'
+    throw new SchemaError(`Champion file for ${heroId} has ${count} spells, expected ${SPELL_COUNT}`)
+  }
+
+  return spells.map((spell: unknown, index): ParsedSpell => {
+    const path = `spells[${index}]`
+    if (!isObject(spell)) throw new SchemaError(`${path} is not an object`)
+    const key = index === 0 ? 'passive' : 'active'
+    if (spell.spellKey !== key) {
+      throw new SchemaError(`${path}.spellKey is ${JSON.stringify(spell.spellKey)}, expected "${key}"`)
+    }
+    const costType = requireString(spell.costtype, `${path}.costtype`)
+    if (!Object.hasOwn(SPELL_COST_TYPES, costType)) {
+      throw new SchemaError(`${path}.costtype is unknown: ${JSON.stringify(costType)}`)
+    }
+
+    const variables = spellVariables(spell)
+    const cooldownText = variables.get('cd')
+    const type = SPELL_COST_TYPES[costType] ?? null
+    let cost: AbilityCost | null = null
+    if (type !== null) {
+      const costText = variables.get(costType)
+      if (costText === undefined) throw new SchemaError(`${path} costs ${costType} but has no "${costType}" values`)
+      const values = perRank(costText, `${path} ${costType}`, type === 'health%' ? 100 : 1)
+      if (values) cost = { type, values }
+    }
+    const name = requireString(spell.name, `${path}.name`).trim()
+    return {
+      nameZh: name === '' ? null : name,
+      cooldown: cooldownText === undefined ? null : perRank(cooldownText, `${path} cd`),
+      cost,
+    }
+  })
 }

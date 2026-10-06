@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import type { BaseStatsFile, ChampionsFile, Snapshot } from '../src/shared/types.ts'
+import type { AbilitiesFile, BaseStatsFile, ChampionsFile, Snapshot } from '../src/shared/types.ts'
 
 const script = fileURLToPath(new URL('./fetch-stats.ts', import.meta.url))
 const fixture = (name: string) => fileURLToPath(new URL(`./fixtures/${name}`, import.meta.url))
@@ -50,11 +50,12 @@ describe('fetch-stats CLI (offline fixtures)', () => {
   }
 
   it('writes a snapshot and champions.json, then is idempotent', async () => {
-    const details = ['--hero-details-dir', fixture('hero_details')]
-    const added = { date: '2026-10-03', snapshot: 'added', champions: 'changed', base_stats: 'changed' }
+    const details = ['--hero-details-dir', fixture('hero_details'), '--official-dir', fixture('official')]
+    const added = { date: '2026-10-03', snapshot: 'added', champions: 'changed', base_stats: 'changed', abilities: 'changed' }
     expect(await run('--dry-run', ...details)).toEqual(added)
     expect(await readdir(dir)).not.toContain('snapshots')
     expect(await readdir(dir)).not.toContain('base-stats.json')
+    expect(await readdir(dir)).not.toContain('abilities.json')
 
     expect(await run(...details)).toEqual(added)
     const snapshotPath = join(dir, 'snapshots', '2026-10-03.json')
@@ -64,10 +65,19 @@ describe('fetch-stats CLI (offline fixtures)', () => {
     expect(champions.champions).toHaveLength(25)
     expect(champions.champions.every((c) => c.nameSource !== 'fallback')).toBe(true)
     expect(champions.champions.every((c) => c.ratings !== null)).toBe(true)
-    // Only Garen has a fixture file; the other champions fail without failing the run.
+    // Only Garen has fixture files; the other champions fail without failing the run.
     const baseStats = JSON.parse(await readFile(join(dir, 'base-stats.json'), 'utf8')) as BaseStatsFile
     expect(baseStats).toMatchObject({ schema: 1, version: '7.3' })
     expect(baseStats.champions).toEqual([expect.objectContaining({ heroId: 10001, hp: [690, 128], ms: 350 })])
+    const abilities = JSON.parse(await readFile(join(dir, 'abilities.json'), 'utf8')) as AbilitiesFile
+    expect(abilities.champions.map((entry) => [entry.heroId, entry.page])).toEqual([[10001, 'garen']])
+    expect(abilities.champions[0]!.abilities[1]).toMatchObject({
+      slot: '1',
+      name: 'Decisive Strike',
+      nameZh: '致命打击',
+      cooldown: [9, 8, 8, 7],
+      cost: null,
+    })
 
     const before = await readFile(snapshotPath, 'utf8')
     expect(await run(...details)).toEqual({
@@ -75,17 +85,27 @@ describe('fetch-stats CLI (offline fixtures)', () => {
       snapshot: 'unchanged',
       champions: 'unchanged',
       base_stats: 'unchanged',
+      abilities: 'unchanged',
     })
     expect(await readFile(snapshotPath, 'utf8')).toBe(before)
   }, 30_000)
 
-  it('can skip base stats', async () => {
-    expect(await run('--no-base-stats')).toEqual({
+  it('can skip base stats and abilities', async () => {
+    expect(await run('--no-base-stats', '--no-abilities')).toEqual({
       date: '2026-10-03',
       snapshot: 'added',
       champions: 'changed',
       base_stats: 'skipped',
+      abilities: 'skipped',
     })
     expect(await readdir(dir)).not.toContain('base-stats.json')
+    expect(await readdir(dir)).not.toContain('abilities.json')
+  }, 30_000)
+
+  it('still reads champion files for abilities when base stats are skipped', async () => {
+    const outputs = await run('--no-base-stats', '--hero-details-dir', fixture('hero_details'), '--official-dir', fixture('official'))
+    expect(outputs).toMatchObject({ base_stats: 'skipped', abilities: 'changed' })
+    const abilities = JSON.parse(await readFile(join(dir, 'abilities.json'), 'utf8')) as AbilitiesFile
+    expect(abilities.champions[0]!.abilities[4]).toMatchObject({ name: 'Demacian Justice', cooldown: [70, 65, 60] })
   }, 30_000)
 })

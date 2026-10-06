@@ -3,14 +3,17 @@ import type { Snapshot } from '../../src/shared/types.ts'
 import { summarizeBrackets, type SnapshotStatus } from './snapshot.ts'
 import type { RankListSummary } from './tencent.ts'
 
-export type BaseStatsStatus = 'changed' | 'unchanged' | 'skipped'
+/** What happened to a best-effort data file (base-stats.json, abilities.json). */
+export type FileStatus = 'changed' | 'unchanged' | 'skipped'
 
 export interface ReportInput {
   snapshot: Snapshot
   status: SnapshotStatus
   championsChanged: boolean
   championCount: number
-  baseStats: { status: BaseStatsStatus; championCount: number; version: string | null }
+  baseStats: { status: FileStatus; championCount: number; version: string | null }
+  /** Champions in abilities.json, how many have English text and how many have cooldowns or costs. */
+  abilities: { status: FileStatus; championCount: number; withText: number; withNumbers: number }
   summary: RankListSummary
   warnings: readonly string[]
   dryRun: boolean
@@ -25,6 +28,11 @@ function baseStatsLine({ status, championCount, version }: ReportInput['baseStat
   return `- Base stats: **${status}** (${championCount} champions${version ? `, game version ${version}` : ''})`
 }
 
+function abilitiesLine({ status, championCount, withText, withNumbers }: ReportInput['abilities']): string {
+  if (status === 'skipped') return '- Abilities: **skipped**'
+  return `- Abilities: **${status}** (${championCount} champions; ${withText} with English text, ${withNumbers} with cooldowns or costs)`
+}
+
 /** Markdown for $GITHUB_STEP_SUMMARY. */
 export function renderReport(input: ReportInput): string {
   const { snapshot, status, summary } = input
@@ -33,6 +41,7 @@ export function renderReport(input: ReportInput): string {
     '',
     `- Snapshot: **${status}**; champions.json: **${input.championsChanged ? 'changed' : 'unchanged'}** (${input.championCount} champions)`,
     baseStatsLine(input.baseStats),
+    abilitiesLine(input.abilities),
     `- Rows: ${summary.rowCount}; rank keys: ${summary.rankKeys.join(', ')}; lane keys: ${summary.laneKeys.join(', ')}` +
       (summary.emptyBrackets.length > 0 ? `; empty brackets: ${summary.emptyBrackets.join(', ')}` : ''),
     `- dtstatdate values: ${Object.entries(summary.dates)

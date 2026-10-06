@@ -1,0 +1,276 @@
+{
+  "props": {
+    "pageProps": {
+      "page": {
+        "locale": "en-us",
+        "url": "https://wildrift.leagueoflegends.com/en-us/champions/",
+        "title": "Champions",
+        "type": "page",
+        "blades": [
+          {
+            "type": "riotbar",
+            "productId": "wildrift-cb3"
+          },
+          {
+            "header": {
+              "supertitle": "SELECT YOUR",
+              "title": "CHAMPION",
+              "description": {
+                "type": "html",
+                "body": "<p>With over 40 champions to collect and play, you can find your favorites and show off your style.</p>"
+              }
+            },
+            "type": "textMasthead"
+          },
+          {
+            "async": {
+              "metadata": {
+                "channelHostname": "wildrift.leagueoflegends.com",
+                "channelMachineName": "wildrift_website",
+                "overrideSize": 0,
+                "resultsUpdatedAt": "2026-10-06T09:41:16.253865197Z",
+                "smartListMachineName": "wildrift_champions",
+                "from": 0,
+                "limit": 200,
+                "totalItems": 25,
+                "totalPages": 1,
+                "locale": "en-us"
+              }
+            },
+            "items": [
+              {
+                "title": "GAREN",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/garen/"
+                  }
+                }
+              },
+              {
+                "title": "AATROX",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/aatrox/"
+                  }
+                }
+              },
+              {
+                "title": "LUX",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/lux/"
+                  }
+                }
+              },
+              {
+                "title": "NUNU & WILLUMP",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/nunu-and-willump/"
+                  }
+                }
+              },
+              {
+                "title": "WUKONG",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/wukong/"
+                  }
+                }
+              },
+              {
+                "title": "VAYNE",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/vayne/"
+                  }
+                }
+              },
+              {
+                "title": "XIN ZHAO",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/xin-zhao/"
+                  }
+                }
+              },
+              {
+                "title": "KHA'ZIX",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/khazix/"
+                  }
+                }
+              },
+              {
+                "title": "JINX",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/jinx/"
+                  }
+                }
+              },
+              {
+                "title": "BRAUM",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/braum/"
+                  }
+                }
+              },
+              {
+                "title": "AURELION SOL",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/aurelion-sol/"
+                  }
+                }
+              },
+              {
+                "title": "TWISTED FATE",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/twisted-fate/"
+                  }
+                }
+              },
+              {
+                "title": "KAI'SA",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/kaisa/"
+                  }
+                }
+              },
+              {
+                "title": "AHRI",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/ahri/"
+                  }
+                }
+              },
+              {
+                "title": "JARVAN IV",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/jarvan-iv/"
+                  }
+                }
+              },
+              {
+                "title": "LEE SIN",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/lee-sin/"
+                  }
+                }
+              },
+              {
+                "title": "DR. MUNDO",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/dr-mundo/"
+                  }
+                }
+              },
+              {
+                "title": "MISS FORTUNE",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/miss-fortune/"
+                  }
+                }
+              },
+              {
+                "title": "MASTER YI",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/master-yi/"
+                  }
+                }
+              },
+              {
+                "title": "CHO'GATH",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/chogath/"
+                  }
+                }
+              },
+              {
+                "title": "KOG'MAW",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/kogmaw/"
+                  }
+                }
+              },
+              {
+                "title": "VEL'KOZ",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/velkoz/"
+                  }
+                }
+              },
+              {
+                "title": "THRESH",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/thresh/"
+                  }
+                }
+              },
+              {
+                "title": "K'Sante",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/ksante/"
+                  }
+                }
+              },
+              {
+                "title": "NORRA",
+                "action": {
+                  "type": "weblink",
+                  "payload": {
+                    "url": "/en-us/champions/norra/"
+                  }
+                }
+              }
+            ],
+            "type": "characterCardGrid"
+          }
+        ]
+      }
+    }
+  },
+  "page": "/[[...pathArray]]",
+  "buildId": "Y4OR6rBZJdkHMNuLoK2Pi",
+  "locale": "en-us"
+}

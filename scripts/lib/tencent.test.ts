@@ -6,6 +6,7 @@ import {
   heroDetailUrl,
   parseHeroDetail,
   parseHeroList,
+  parseHeroSpells,
   parseRankList,
   parseRatings,
   parseStatDate,
@@ -255,5 +256,60 @@ describe('parseHeroDetail', () => {
 describe('heroDetailUrl', () => {
   it('points at the champion library file', () => {
     expect(heroDetailUrl(10001)).toBe('https://game.gtimg.cn/images/lgamem/act/lrlib/js/hero/10001.js')
+  })
+})
+
+describe('parseHeroSpells', () => {
+  type RawSpell = Record<string, string>
+  const garen = () => structuredClone(fixture('hero_details/10001.json')) as { hero: Record<string, unknown>; spells: RawSpell[] }
+
+  it('reads per-rank cooldowns from the "cd" values of the real file', () => {
+    const spells = parseHeroSpells(garen(), 10001)
+    expect(spells.map((spell) => spell.nameZh)).toEqual(['坚韧', '致命打击', '勇气', '审判', '德玛西亚正义'])
+    expect(spells.map((spell) => spell.cooldown)).toEqual([null, [9, 8, 8, 7], [18, 16, 14, 12], [9], [70, 65, 60]])
+    // Garen's abilities are free.
+    expect(spells.every((spell) => spell.cost === null)).toBe(true)
+  })
+
+  it('reads costs from the values named after costtype and scales health percentages', () => {
+    const json = garen()
+    Object.assign(json.spells[1]!, { costtype: 'MP', variType5: 'MP', variValue5: '50/55/60/65' })
+    Object.assign(json.spells[2]!, { costtype: 'HPPer', variType2: 'HPPer', variValue2: '0.2/0.2/0.2/0.2' })
+    Object.assign(json.spells[3]!, { costtype: 'Resource', variType2: 'Resource', variValue2: '0/0/0/0' })
+    Object.assign(json.spells[4]!, { costtype: 'HP', variType2: 'HP', variValue2: '100', variValue1: '0/0/0' })
+    const spells = parseHeroSpells(json)
+    expect(spells[1]!.cost).toEqual({ type: 'mana', values: [50, 55, 60, 65] })
+    expect(spells[2]!.cost).toEqual({ type: 'health%', values: [20, 20, 20, 20] })
+    // All-zero values mean "nothing", not "costs 0".
+    expect(spells[3]!.cost).toBeNull()
+    expect(spells[4]).toEqual({ nameZh: '德玛西亚正义', cooldown: null, cost: { type: 'health', values: [100] } })
+  })
+
+  it('uses the first of duplicate value types and ignores non-numeric extras', () => {
+    const json = garen()
+    Object.assign(json.spells[1]!, { variType9: 'cd', variValue9: '1/1/1/1', variType3: '攻击系数', variValue3: '35%' })
+    expect(parseHeroSpells(json)[1]!.cooldown).toEqual([9, 8, 8, 7])
+  })
+
+  it('fails loudly on a wrong champion, slot order or unknown cost type', () => {
+    expect(() => parseHeroSpells(garen(), 10002)).toThrow('describes hero 10001')
+    const short = garen()
+    short.spells.pop()
+    expect(() => parseHeroSpells(short)).toThrow('has 4 spells, expected 5')
+    const swapped = garen()
+    swapped.spells.reverse()
+    expect(() => parseHeroSpells(swapped)).toThrow('expected "passive"')
+    const unknown = garen()
+    unknown.spells[1]!.costtype = 'Energy'
+    expect(() => parseHeroSpells(unknown)).toThrow('costtype is unknown')
+    const missing = garen()
+    missing.spells[1]!.costtype = 'MP'
+    expect(() => parseHeroSpells(missing)).toThrow('has no "MP" values')
+    const negative = garen()
+    negative.spells[1]!.variValue1 = '9/-8/8/7'
+    expect(() => parseHeroSpells(negative)).toThrow('negative')
+    const text = garen()
+    text.spells[1]!.variValue1 = '9/8/x/7'
+    expect(() => parseHeroSpells(text)).toThrow(SchemaError)
   })
 })
