@@ -2,6 +2,8 @@ import { TierBadge } from '../components/TierBadge.tsx'
 import { useCoreData } from '../data/hooks.ts'
 import { bracketsInLatest } from '../lib/champion.ts'
 import { formatLongDate } from '../lib/format.ts'
+import { MIN_ELO_PICK, MIN_FLEX_SHARE } from '../lib/insights.ts'
+import { MAX_RATING } from '../lib/profile.ts'
 import { BRACKETS, BRACKET_LABELS } from '../shared/constants.ts'
 import { TIER_THRESHOLDS, TIER_WEIGHTS } from '../shared/tiers.ts'
 
@@ -132,10 +134,56 @@ export default function AboutPage() {
         ))}
       </ul>
 
+      <h2>Insights</h2>
+      <dl className="definitions">
+        <dt>Picked or banned</dt>
+        <dd>
+          A champion’s pick rates in all the roles it’s listed in, plus its ban rate. Ranked uses draft pick, so a champion
+          is in a game at most once, and the sum is the share of games in which it was picked or banned. Roles under about
+          1% aren’t listed, so it can be slightly low.
+        </dd>
+        <dt>Role split</dt>
+        <dd>
+          {`How a champion’s listed games divide between its roles. A flex pick plays at least ${MIN_FLEX_SHARE}% of its games in its second role.`}
+        </dd>
+        <dt>High elo vs all ranks</dt>
+        <dd>
+          {`Win rate in a higher bracket minus win rate across all ranks, in the same role on the same day, in percentage points. Higher brackets play far fewer games, so a difference of a point or two can be noise. The Insights lists only include roles picked in at least ${MIN_ELO_PICK}% of games in both brackets, and champion pages mark smaller samples.`}
+        </dd>
+      </dl>
+
+      <h2>Champion ratings and base stats</h2>
+      <p>
+        The Champions page and each champion’s profile come from Tencent’s champion pages, refreshed with every stats
+        update.
+      </p>
+      <dl className="definitions">
+        <dt>Ratings</dt>
+        <dd>
+          {`Tencent rates every champion from 1 to ${MAX_RATING} for difficulty, damage, toughness and utility. Toughness and utility translate Tencent’s survivability and assist ratings.`}
+        </dd>
+        <dt>Base stats</dt>
+        <dd>
+          Health, mana, attack damage, armor, magic resist and move speed at level 1, and how much each grows per level,
+          for the current patch. Regeneration is per 5 seconds.
+        </dd>
+        <dt>Per level</dt>
+        <dd>
+          Tencent scales each level-up by a multiplier that starts below 1 and rises above it, averaging 1. Per level is
+          therefore the average gain, and level 15 is level 1 plus 14 times per level. Tencent doesn’t document this; the
+          site works it out from the data.
+        </dd>
+      </dl>
+      <p>Attack speed, critical strike, attack range and ability numbers aren’t shown.</p>
+
       <h2>Limitations</h2>
       <ul>
         <li>China server only. Balance, patch timing and the meta can differ from other regions.</li>
         <li>Ranked games only. Tencent doesn’t publish stats for ARAM or other modes.</li>
+        <li>
+          No builds, items, runes, KDA, matchups, synergies or stats by game length (early vs late game). None of them are
+          in the public data the site uses.
+        </li>
         <li>{`History starts on ${formatLongDate(firstDate)}, and earlier days can’t be backfilled.`}</li>
         <li>
           Tencent can change or remove the endpoint without notice. The update job stops with an error when the data

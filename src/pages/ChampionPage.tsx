@@ -2,17 +2,21 @@ import { Suspense, useId, useRef } from 'react'
 import { Link, useParams } from 'react-router'
 import { ChampionIcon } from '../components/ChampionIcon.tsx'
 import { Delta } from '../components/Delta.tsx'
+import { ErrorBoundary } from '../components/ErrorBoundary.tsx'
+import { RatingPips } from '../components/RatingPips.tsx'
 import { Segmented } from '../components/Segmented.tsx'
-import { EmptyState, PageLoading } from '../components/States.tsx'
+import { EmptyState, ErrorState, PageLoading } from '../components/States.tsx'
 import { TierBadge, TierChange } from '../components/TierBadge.tsx'
 import { TrendChart } from '../components/TrendChart.tsx'
-import { useCoreData, useHistory } from '../data/hooks.ts'
+import { useBaseStats, useCoreData, useHistory } from '../data/hooks.ts'
 import { usePrefersReducedMotion, useQueryParams } from '../hooks/index.ts'
 import { MIN_CHART_POINTS, metricSeries } from '../lib/chart.ts'
 import { bracketsWithData, findLatestRow, lanesWithData, mainLane } from '../lib/champion.ts'
 import { formatLongDate, formatPct } from '../lib/format.ts'
+import { eloDiff, presenceFor, roleSplitText, type EloDiff, type Presence } from '../lib/insights.ts'
 import { bracketOptions } from '../lib/options.ts'
 import { readParam } from '../lib/params.ts'
+import { MAX_RATING, RATING_KEYS, RATING_LABELS, formatGrowth, formatStat, statLines } from '../lib/profile.ts'
 import { championPath, comparePath } from '../lib/routes.ts'
 import {
   BRACKET_LABELS,
@@ -38,7 +42,7 @@ function CnTierValue({ row }: { row: LatestRow }) {
   )
 }
 
-function Readout({ row }: { row: LatestRow }) {
+function Readout({ row, elo }: { row: LatestRow; elo: EloDiff | null }) {
   return (
     <dl className="stats">
       <div className="stat">
@@ -78,6 +82,37 @@ function Readout({ row }: { row: LatestRow }) {
           </span>
         </dd>
       </div>
+      {elo && (
+        <div className="stat">
+          <dt>Win rate vs all ranks</dt>
+          <dd>
+            <span className="stat__value">
+              <Delta value={elo.diff} unit=" pts" />
+            </span>
+            {elo.lowSample && <span className="stat__sub">small sample</span>}
+          </dd>
+        </div>
+      )}
+    </dl>
+  )
+}
+
+function PresenceFacts({ presence }: { presence: Presence }) {
+  return (
+    <dl className="facts">
+      <div>
+        <dt>Picked or banned</dt>
+        <dd>
+          {`${formatPct(presence.presence)} of games `}
+          <span className="muted">{`· ${formatPct(presence.pick)} picked, ${formatPct(presence.ban)} banned, all roles`}</span>
+        </dd>
+      </div>
+      {presence.lanes.length > 1 && (
+        <div>
+          <dt>Role split</dt>
+          <dd>{roleSplitText(presence.lanes)}</dd>
+        </div>
+      )}
     </dl>
   )
 }
@@ -107,6 +142,8 @@ function ChampionStats({ champion }: { champion: PublicChampion }) {
   const lane = readParam(params, 'lane', isLane, defaultLane)
   const row = findLatestRow(latest, bracket, lane, heroId)
   const points = history.series[bracket]?.[lane] ?? []
+  const elo = eloDiff(latest, bracket, lane, heroId)
+  const presence = presenceFor(latest, bracket, heroId)
 
   const changeBracket = (next: Bracket) => {
     const nextLanes = lanesWithData(latest, history, next, heroId)
@@ -160,7 +197,8 @@ function ChampionStats({ champion }: { champion: PublicChampion }) {
         </h2>
         {row ? (
           <>
-            <Readout row={row} />
+            <Readout row={row} elo={elo} />
+            {presence && <PresenceFacts presence={presence} />}
             <p className="readout__note">
               {latest.previousDate
                 ? `Stats for ${latest.date}. Changes compare with ${latest.previousDate}.`
@@ -168,7 +206,10 @@ function ChampionStats({ champion }: { champion: PublicChampion }) {
             </p>
           </>
         ) : (
-          <p className="readout__note">{`Not listed on ${latest.date}. ${LISTING_RULE}`}</p>
+          <>
+            <p className="readout__note">{`Not listed on ${latest.date}. ${LISTING_RULE}`}</p>
+            {presence && <PresenceFacts presence={presence} />}
+          </>
         )}
       </section>
 
@@ -254,6 +295,124 @@ function ChampionStats({ champion }: { champion: PublicChampion }) {
   )
 }
 
+function NoValue({ label }: { label: string }) {
+  return (
+    <span className="muted">
+      <span aria-hidden="true">—</span>
+      <span className="sr-only">{label}</span>
+    </span>
+  )
+}
+
+function BaseStatsTable({ champion }: { champion: PublicChampion }) {
+  const { file, byId } = useBaseStats()
+  const stats = byId.get(champion.heroId)
+  const { growth, version } = file
+  const maxLevel = growth.length
+  if (!stats || maxLevel < 2) {
+    return (
+      <>
+        <h3>Base stats</h3>
+        <p className="muted">Base stats aren’t available yet.</p>
+      </>
+    )
+  }
+  const lines = statLines(stats, growth)
+  const first = growth[1]
+  const last = growth[maxLevel - 1]
+  return (
+    <>
+      <h3>{version ? `Base stats · patch ${version}` : 'Base stats'}</h3>
+      <div className="table-scroll">
+        <table className="data-table profile-table">
+          <caption className="sr-only">{`${champion.name}’s base stats at level 1 and level ${maxLevel}`}</caption>
+          <thead>
+            <tr>
+              <th scope="col">Stat</th>
+              <th scope="col" className="num">
+                Level 1
+              </th>
+              <th scope="col" className="num">
+                Per level
+              </th>
+              <th scope="col" className="num">
+                {`Level ${maxLevel}`}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {lines.map((line) => (
+              <tr key={line.key}>
+                <th scope="row">{line.label}</th>
+                {line.key === 'mana' && stats.mana === null ? (
+                  <td className="muted" colSpan={3}>
+                    No mana
+                  </td>
+                ) : (
+                  <>
+                    <td className="num">{formatStat(line.first)}</td>
+                    <td className="num">{line.perLevel === null ? <NoValue label="none" /> : formatGrowth(line.perLevel)}</td>
+                    <td className="num">{formatStat(line.last)}</td>
+                  </>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="profile__note">
+        {`Regeneration is per 5 seconds. Per level is the average gain per level-up${
+          first !== undefined && last !== undefined
+            ? `: early levels give less and later ones more (×${first} at level 2 up to ×${last} at level ${maxLevel})`
+            : ''
+        }.`}
+      </p>
+    </>
+  )
+}
+
+function ProfileSection({ champion }: { champion: PublicChampion }) {
+  const id = useId()
+  const { ratings } = champion
+  return (
+    <section className="section" aria-labelledby={`${id}-profile`}>
+      <h2 id={`${id}-profile`}>Profile</h2>
+      <p className="section__note">
+        From Tencent’s champion pages. <Link to="/champions">Compare every champion</Link>
+      </p>
+      <div className="profile">
+        <div>
+          <h3>Ratings</h3>
+          {ratings ? (
+            <>
+              <dl className="ratings">
+                {RATING_KEYS.map((key) => (
+                  <div key={key}>
+                    <dt>{RATING_LABELS[key]}</dt>
+                    <dd>
+                      <RatingPips value={ratings[key]} />
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <p className="profile__note">{`From 1 to ${MAX_RATING}.`}</p>
+            </>
+          ) : (
+            <p className="muted">Ratings aren’t available yet.</p>
+          )}
+        </div>
+        <div>
+          <ErrorBoundary fallback={(error, retry) => <ErrorState error={error} retry={retry} />}>
+            <Suspense fallback={<PageLoading label="Loading base stats…" />}>
+              <BaseStatsTable champion={champion} />
+            </Suspense>
+          </ErrorBoundary>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function ChampionView({ champion }: { champion: PublicChampion }) {
   return (
     <>
@@ -275,6 +434,7 @@ function ChampionView({ champion }: { champion: PublicChampion }) {
       <Suspense fallback={<PageLoading label={`Loading ${champion.name}’s stats…`} />}>
         <ChampionStats champion={champion} />
       </Suspense>
+      <ProfileSection champion={champion} />
     </>
   )
 }

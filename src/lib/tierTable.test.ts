@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { LatestFile, LatestRow, PublicChampion } from '../shared/types.ts'
-import { groupByTier, nextSort, sortTierRows, tierRows, type TierTableRow } from './tierTable.ts'
+import { nextSort } from './sort.ts'
+import { DEFAULT_SORT_DIR, groupByTier, sortTierRows, tierRows, type TierTableRow } from './tierTable.ts'
 
 function row(heroId: number, score: number, extra: Partial<LatestRow> = {}): LatestRow {
   return {
@@ -79,11 +80,11 @@ describe('sortTierRows', () => {
   })
 })
 
-describe('nextSort', () => {
+describe('nextSort with the tier-table defaults', () => {
   it('flips the active column and starts others at their default', () => {
-    expect(nextSort({ key: 'win', dir: 'desc' }, 'win')).toEqual({ key: 'win', dir: 'asc' })
-    expect(nextSort({ key: 'win', dir: 'asc' }, 'name')).toEqual({ key: 'name', dir: 'asc' })
-    expect(nextSort({ key: 'name', dir: 'asc' }, 'pick')).toEqual({ key: 'pick', dir: 'desc' })
+    expect(nextSort({ key: 'win', dir: 'desc' }, 'win', DEFAULT_SORT_DIR)).toEqual({ key: 'win', dir: 'asc' })
+    expect(nextSort({ key: 'win', dir: 'asc' }, 'name', DEFAULT_SORT_DIR)).toEqual({ key: 'name', dir: 'asc' })
+    expect(nextSort({ key: 'name', dir: 'asc' }, 'pick', DEFAULT_SORT_DIR)).toEqual({ key: 'pick', dir: 'desc' })
   })
 })
 

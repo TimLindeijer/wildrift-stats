@@ -1,6 +1,5 @@
 import { useId } from 'react'
-import { Link } from 'react-router'
-import { ChampionIcon } from '../components/ChampionIcon.tsx'
+import { ChampionListItem } from '../components/ChampionListItem.tsx'
 import { Delta } from '../components/Delta.tsx'
 import { Segmented } from '../components/Segmented.tsx'
 import { EmptyState } from '../components/States.tsx'
@@ -12,8 +11,7 @@ import { formatLongDate, formatPct } from '../lib/format.ts'
 import { isMoverWindowId, splitMovers, windowItems, windowReadyDate, type MoverItem } from '../lib/movers.ts'
 import { LANE_FILTER_OPTIONS, bracketOptions } from '../lib/options.ts'
 import { readParam } from '../lib/params.ts'
-import { championPath } from '../lib/routes.ts'
-import { isLaneFilter, unknownChampionName } from '../lib/tierTable.ts'
+import { isLaneFilter } from '../lib/tierTable.ts'
 import { BRACKET_LABELS, LANE_LABELS, isBracket, type Bracket } from '../shared/constants.ts'
 import type { MoverWindow } from '../shared/types.ts'
 
@@ -37,31 +35,20 @@ function MoverList({ title, emptyText, items, bracket, showLane, byId }: MoverLi
         <p className="muted">{emptyText}</p>
       ) : (
         <ol className="mover-list">
-          {items.map((item) => {
-            const champion = byId.get(item.heroId)
-            const name = champion?.name ?? unknownChampionName(item.heroId)
-            return (
-              <li key={`${item.lane}:${item.heroId}`} className="mover">
-                <ChampionIcon src={champion?.avatar} name={name} size={36} />
-                <span className="mover__text">
-                  {champion ? (
-                    <Link className="mover__name" to={championPath(champion.slug, { bracket, lane: item.lane })}>
-                      {name}
-                    </Link>
-                  ) : (
-                    <span className="mover__name">{name}</span>
-                  )}
-                  <span className="mover__meta">
-                    {`${showLane ? `${LANE_LABELS[item.lane]} · ` : ''}${formatPct(item.win)} win · ${formatPct(item.pick)} pick`}
-                  </span>
-                </span>
-                <span className="mover__delta">
-                  <Delta value={item.dWin} />
-                  <span className="sr-only"> points</span>
-                </span>
-              </li>
-            )
-          })}
+          {items.map((item) => (
+            <ChampionListItem
+              key={`${item.lane}:${item.heroId}`}
+              heroId={item.heroId}
+              champion={byId.get(item.heroId)}
+              link={{ bracket, lane: item.lane }}
+              meta={`${showLane ? `${LANE_LABELS[item.lane]} · ` : ''}${formatPct(item.win)} win · ${formatPct(item.pick)} pick`}
+            >
+              <span className="mover__delta">
+                <Delta value={item.dWin} />
+                <span className="sr-only"> points</span>
+              </span>
+            </ChampionListItem>
+          ))}
         </ol>
       )}
     </section>

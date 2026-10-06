@@ -1,5 +1,6 @@
 import { LANES, isLane, type Bracket, type Lane } from '../shared/constants.ts'
 import type { LatestFile, LatestRow, PublicChampion, Tier } from '../shared/types.ts'
+import { compareSortValues, type SortDir } from './sort.ts'
 
 /** A role filter: one lane, or every lane at once. */
 export type LaneFilter = Lane | 'any'
@@ -51,7 +52,6 @@ export function tierRows(
 
 export const SORT_KEYS = ['tier', 'name', 'win', 'dWin', 'pick', 'ban', 'cn'] as const
 export type SortKey = (typeof SORT_KEYS)[number]
-export type SortDir = 'asc' | 'desc'
 
 /** The direction a column sorts in when it's first clicked: best or biggest first. */
 export const DEFAULT_SORT_DIR: Record<SortKey, SortDir> = {
@@ -66,10 +66,6 @@ export const DEFAULT_SORT_DIR: Record<SortKey, SortDir> = {
 
 export function isSortKey(value: unknown): value is SortKey {
   return typeof value === 'string' && (SORT_KEYS as readonly string[]).includes(value)
-}
-
-export function isSortDir(value: unknown): value is SortDir {
-  return value === 'asc' || value === 'desc'
 }
 
 function sortValue(row: TierTableRow, key: SortKey): number | string | null {
@@ -93,24 +89,13 @@ function sortValue(row: TierTableRow, key: SortKey): number | string | null {
 
 /** A sorted copy. Missing values always go last; ties fall back to score, then name. */
 export function sortTierRows(rows: readonly TierTableRow[], key: SortKey, dir: SortDir): TierTableRow[] {
-  const sign = dir === 'asc' ? 1 : -1
-  return [...rows].sort((a, b) => {
-    const va = sortValue(a, key)
-    const vb = sortValue(b, key)
-    if (va !== vb) {
-      if (va === null) return 1
-      if (vb === null) return -1
-      const order = typeof va === 'string' && typeof vb === 'string' ? va.localeCompare(vb, 'en') : Number(va) - Number(vb)
-      if (order !== 0) return sign * order
-    }
-    return b.score - a.score || a.name.localeCompare(b.name, 'en') || a.lane.localeCompare(b.lane)
-  })
-}
-
-/** Clicking the active column flips it; clicking another column starts at that column's default. */
-export function nextSort(current: { key: SortKey; dir: SortDir }, clicked: SortKey): { key: SortKey; dir: SortDir } {
-  if (current.key === clicked) return { key: clicked, dir: current.dir === 'asc' ? 'desc' : 'asc' }
-  return { key: clicked, dir: DEFAULT_SORT_DIR[clicked] }
+  return [...rows].sort(
+    (a, b) =>
+      compareSortValues(sortValue(a, key), sortValue(b, key), dir) ||
+      b.score - a.score ||
+      a.name.localeCompare(b.name, 'en') ||
+      a.lane.localeCompare(b.lane),
+  )
 }
 
 /** Consecutive runs of rows with the same tier, for the grouped tier-list view. */

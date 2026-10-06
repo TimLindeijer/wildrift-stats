@@ -1,8 +1,9 @@
-import { useId, type ReactNode } from 'react'
+import { useId } from 'react'
 import { Link } from 'react-router'
-import { ChampionIcon } from '../components/ChampionIcon.tsx'
+import { ChampionCell } from '../components/ChampionCell.tsx'
 import { Delta } from '../components/Delta.tsx'
 import { Segmented } from '../components/Segmented.tsx'
+import { SortHeader } from '../components/SortHeader.tsx'
 import { EmptyState } from '../components/States.tsx'
 import { TierBadge, TierChange } from '../components/TierBadge.tsx'
 import { useCoreData } from '../data/hooks.ts'
@@ -13,16 +14,14 @@ import { LANE_FILTER_OPTIONS, bracketOptions } from '../lib/options.ts'
 import { readParam } from '../lib/params.ts'
 import { championPath } from '../lib/routes.ts'
 import { matchesQuery } from '../lib/search.ts'
+import { isSortDir, nextSort, type SortState } from '../lib/sort.ts'
 import {
   DEFAULT_SORT_DIR,
   groupByTier,
   isLaneFilter,
-  isSortDir,
   isSortKey,
-  nextSort,
   sortTierRows,
   tierRows,
-  type SortDir,
   type SortKey,
   type TierTableRow,
 } from '../lib/tierTable.ts'
@@ -45,37 +44,6 @@ function percent(weight: number): string {
 
 function plural(count: number, one: string, many: string): string {
   return `${count} ${count === 1 ? one : many}`
-}
-
-interface SortState {
-  key: SortKey
-  dir: SortDir
-}
-
-interface SortHeaderProps {
-  column: SortKey
-  sort: SortState
-  onSort: (column: SortKey) => void
-  className?: string
-  children: ReactNode
-}
-
-function SortHeader({ column, sort, onSort, className, children }: SortHeaderProps) {
-  const active = sort.key === column
-  return (
-    <th
-      scope="col"
-      className={className}
-      aria-sort={active ? (sort.dir === 'asc' ? 'ascending' : 'descending') : undefined}
-    >
-      <button type="button" className="sort-button" onClick={() => onSort(column)}>
-        {children}
-        <span className="sort-button__arrow" aria-hidden="true">
-          {active ? (sort.dir === 'asc' ? '↑' : '↓') : ''}
-        </span>
-      </button>
-    </th>
-  )
 }
 
 function CnTier({ row }: { row: TierTableRow }) {
@@ -103,26 +71,16 @@ interface TierRowProps {
 }
 
 function TierRow({ row, rank, bracket, showLane }: TierRowProps) {
-  const label = (
-    <>
-      <ChampionIcon src={row.champion?.avatar} name={row.name} size={32} />
-      <span className="champ-cell__text">
-        <span className="champ-cell__name">{row.name}</span>
-        {showLane && <span className="champ-cell__lane">{LANE_LABELS[row.lane]}</span>}
-      </span>
-    </>
-  )
   return (
     <tr>
       <td className="col-rank">{rank}</td>
       <th scope="row" className="col-champ">
-        {row.slug ? (
-          <Link className="champ-cell" to={championPath(row.slug, { bracket, lane: row.lane })}>
-            {label}
-          </Link>
-        ) : (
-          <span className="champ-cell">{label}</span>
-        )}
+        <ChampionCell
+          name={row.name}
+          avatar={row.champion?.avatar}
+          to={row.slug ? championPath(row.slug, { bracket, lane: row.lane }) : null}
+          sub={showLane ? LANE_LABELS[row.lane] : undefined}
+        />
       </th>
       <td className="col-tier">
         <span className="tier-cell">
@@ -155,7 +113,7 @@ export function TierListPage() {
   const bracket = readParam(params, 'bracket', isBracket, 'all')
   const lane = readParam(params, 'lane', isLaneFilter, 'any')
   const sortKey = readParam(params, 'sort', isSortKey, 'tier')
-  const sort: SortState = { key: sortKey, dir: readParam(params, 'dir', isSortDir, DEFAULT_SORT_DIR[sortKey]) }
+  const sort: SortState<SortKey> = { key: sortKey, dir: readParam(params, 'dir', isSortDir, DEFAULT_SORT_DIR[sortKey]) }
   const query = params.get('q') ?? ''
 
   const available = bracketsInLatest(latest)
@@ -173,7 +131,7 @@ export function TierListPage() {
       : [{ key: 'all', rows: sorted }]
 
   const onSort = (column: SortKey) => {
-    const next = nextSort(sort, column)
+    const next = nextSort(sort, column, DEFAULT_SORT_DIR)
     update({ sort: next.key, dir: next.dir }, { sort: 'tier', dir: DEFAULT_SORT_DIR[next.key] })
   }
 

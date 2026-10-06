@@ -1,6 +1,6 @@
 import { use } from 'react'
 import type { HistoryFile, MoversFile } from '../shared/types.ts'
-import { loadCore, loadHistory, loadMovers, type CoreData } from './load.ts'
+import { loadBaseStats, loadCore, loadHistory, loadMovers, type BaseStatsData, type CoreData } from './load.ts'
 
 /* These hooks suspend while loading and throw DataError on failure: render them inside
    <Suspense> and an error boundary. */
@@ -27,4 +27,10 @@ export function useHistories(heroIds: readonly number[]): HistoryFile[] {
 export function useMovers(): MoversFile {
   const { version } = useCoreData()
   return use(loadMovers(version))
+}
+
+/** Official base stats (lazy: only the Champions page and champion profiles need them). */
+export function useBaseStats(): BaseStatsData {
+  const { version } = useCoreData()
+  return use(loadBaseStats(version))
 }

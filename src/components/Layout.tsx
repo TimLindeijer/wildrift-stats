@@ -9,7 +9,9 @@ const REPO_URL = 'https://github.com/TimLindeijer/wildrift-stats'
 
 const NAV_ITEMS = [
   { to: '/', label: 'Tier list', end: true },
+  { to: '/champions', label: 'Champions', end: false },
   { to: '/movers', label: 'Movers', end: false },
+  { to: '/insights', label: 'Insights', end: false },
   { to: '/compare', label: 'Compare', end: false },
   { to: '/about', label: 'About', end: false },
 ] as const

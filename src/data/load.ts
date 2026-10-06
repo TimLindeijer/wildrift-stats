@@ -1,4 +1,6 @@
 import type {
+  BaseStats,
+  BaseStatsFile,
   HistoryFile,
   LatestFile,
   MoversFile,
@@ -108,4 +110,17 @@ export function loadHistory(heroId: number, version: string): Promise<HistoryFil
 export function loadMovers(version: string): Promise<MoversFile> {
   const path = `movers.json?v=${encodeURIComponent(version)}`
   return cached(path, async () => expectSchema<MoversFile>(await fetchJson(path), 'movers.json'))
+}
+
+export interface BaseStatsData {
+  file: BaseStatsFile
+  byId: ReadonlyMap<number, BaseStats>
+}
+
+export function loadBaseStats(version: string): Promise<BaseStatsData> {
+  const path = `base-stats.json?v=${encodeURIComponent(version)}`
+  return cached(path, async () => {
+    const file = expectSchema<BaseStatsFile>(await fetchJson(path), 'base-stats.json')
+    return { file, byId: new Map(file.champions.map((stats) => [stats.heroId, stats])) }
+  })
 }

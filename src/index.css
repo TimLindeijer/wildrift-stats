@@ -78,6 +78,15 @@ h2 {
   font-weight: 750;
 }
 
+h3 {
+  margin: 1.75rem 0 0.6rem;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 750;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+}
+
 p {
   margin: 0 0 1rem;
 }
@@ -290,6 +299,7 @@ input {
 }
 
 .section__note {
+  max-width: 75ch;
   margin: -0.25rem 0 1rem;
   color: var(--muted);
   font-size: 0.9rem;
@@ -780,7 +790,9 @@ a.champ-cell:hover .champ-cell__name {
 
   /* Narrow screens: the table scrolls sideways and the champion column stays put. */
   .tier-table .col-champ,
-  .compare-table .col-champ {
+  .compare-table .col-champ,
+  .champions-table .col-champ,
+  .flex-table .col-champ {
     position: sticky;
     left: 0;
     z-index: 1;
@@ -1197,10 +1209,162 @@ a.mover__name:hover {
   font-size: 0.8rem;
 }
 
-.mover__delta {
+.mover__delta,
+.mover__value {
   font-size: 1.05rem;
   font-weight: 700;
   text-align: right;
+}
+
+/* Insights */
+
+.controls + .section {
+  margin-top: 1.75rem;
+}
+
+.movers__column > h3 {
+  margin-top: 0;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  margin: 0 0 0.25rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.swatch--pick {
+  background: var(--gold);
+}
+
+.swatch--ban {
+  background: var(--subtle);
+}
+
+/* Pick and ban rate to scale: the full track is every game. */
+.presence-bar {
+  display: flex;
+  gap: 2px;
+  height: 0.35rem;
+  margin-top: 0.4rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--rule);
+}
+
+.presence-bar__pick {
+  background: var(--gold);
+}
+
+.presence-bar__ban {
+  background: var(--subtle);
+}
+
+.list-toggle {
+  margin-top: 1rem;
+}
+
+/* Ratings and champion profile */
+
+.pips {
+  display: inline-flex;
+  align-items: center;
+}
+
+.pips__track {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.pip {
+  width: 0.7rem;
+  height: 0.45rem;
+  border-radius: 2px;
+  background: var(--rule-strong);
+}
+
+.pip--on {
+  background: var(--gold);
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2.75rem;
+  margin: 1.25rem 0 0;
+  font-size: 0.9rem;
+}
+
+.facts dt {
+  margin-bottom: 0.2rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.facts dd {
+  margin: 0;
+}
+
+.profile {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2rem 3.5rem;
+}
+
+@media (min-width: 50rem) {
+  .profile {
+    grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr);
+  }
+}
+
+.profile h3 {
+  margin-top: 0;
+}
+
+.ratings {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+}
+
+.ratings > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ratings dt {
+  color: var(--muted);
+}
+
+.ratings dd {
+  margin: 0;
+}
+
+.profile__note {
+  max-width: 55ch;
+  margin: 0.75rem 0 0;
+  color: var(--subtle);
+  font-size: 0.85rem;
+}
+
+.data-table.profile-table {
+  width: auto;
+  min-width: 20rem;
+}
+
+.data-table.flex-table {
+  width: auto;
+  min-width: min(100%, 32rem);
 }
 
 /* About */
