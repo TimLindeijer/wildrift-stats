@@ -65,11 +65,13 @@ describe('summarizeBrackets and renderReport', () => {
       status: 'added',
       championsChanged: true,
       championCount: 25,
+      baseStats: { status: 'changed', championCount: 140, version: '7.3' },
       summary: parsed().summary,
       warnings: ['careful'],
       dryRun: true,
     })
     expect(markdown).toContain('## Ranked snapshot 2026-10-03 (dry run)')
+    expect(markdown).toContain('- Base stats: **changed** (140 champions, game version 7.3)')
     expect(markdown).toContain('| All ranks | Mid | 6 |')
     expect(markdown).toContain('- careful')
   })

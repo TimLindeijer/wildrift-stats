@@ -21,8 +21,8 @@ function row(heroId: number, score: number, extra: Partial<LatestRow> = {}): Lat
 }
 
 const champions: PublicChampion[] = [
-  { heroId: 1, slug: 'garen', name: 'Garen', title: null, nameZh: '盖伦', avatar: '', lanes: ['baron'], roles: [] },
-  { heroId: 2, slug: 'ahri', name: 'Ahri', title: null, nameZh: '阿狸', avatar: '', lanes: ['mid'], roles: [] },
+  { heroId: 1, slug: 'garen', name: 'Garen', title: null, nameZh: '盖伦', avatar: '', lanes: ['baron'], roles: [], ratings: null },
+  { heroId: 2, slug: 'ahri', name: 'Ahri', title: null, nameZh: '阿狸', avatar: '', lanes: ['mid'], roles: [], ratings: null },
 ]
 const byId = (id: number) => champions.find((c) => c.heroId === id)
 

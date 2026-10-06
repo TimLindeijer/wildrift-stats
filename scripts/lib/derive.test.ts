@@ -167,6 +167,7 @@ describe('buildHistories', () => {
 
 describe('publicChampions', () => {
   it('keeps the fields the frontend needs, sorted by name', () => {
+    const ratings = { difficulty: 1, damage: 3, toughness: 2, utility: 1 }
     const champion = (heroId: number, name: string): Champion => ({
       heroId,
       slug: name.toLowerCase(),
@@ -179,10 +180,11 @@ describe('publicChampions', () => {
       avatar: `https://example.com/${heroId}.png`,
       lanes: ['mid'],
       roles: ['Mage'],
+      ratings: heroId === 1 ? ratings : null,
     })
     expect(publicChampions([champion(2, 'Zed'), champion(1, 'Ahri')])).toEqual([
-      { heroId: 1, slug: 'ahri', name: 'Ahri', title: null, nameZh: '英雄', avatar: 'https://example.com/1.png', lanes: ['mid'], roles: ['Mage'] },
-      { heroId: 2, slug: 'zed', name: 'Zed', title: null, nameZh: '英雄', avatar: 'https://example.com/2.png', lanes: ['mid'], roles: ['Mage'] },
+      { heroId: 1, slug: 'ahri', name: 'Ahri', title: null, nameZh: '英雄', avatar: 'https://example.com/1.png', lanes: ['mid'], roles: ['Mage'], ratings },
+      { heroId: 2, slug: 'zed', name: 'Zed', title: null, nameZh: '英雄', avatar: 'https://example.com/2.png', lanes: ['mid'], roles: ['Mage'], ratings: null },
     ])
   })
 })
@@ -225,5 +227,16 @@ describe('input validation', () => {
         ],
       }),
     ).toThrow(/duplicate slug/)
+  })
+
+  it('normalises missing or invalid champion ratings to null', () => {
+    const champions = parseChampions({
+      champions: [
+        { heroId: 1, name: 'A', slug: 'a' },
+        { heroId: 2, name: 'B', slug: 'b', ratings: { difficulty: 1, damage: 2, toughness: 3, utility: 1 } },
+        { heroId: 3, name: 'C', slug: 'c', ratings: { difficulty: 4, damage: 2, toughness: 3, utility: 1 } },
+      ],
+    })
+    expect(champions.map((c) => c.ratings)).toEqual([null, { difficulty: 1, damage: 2, toughness: 3, utility: 1 }, null])
   })
 })

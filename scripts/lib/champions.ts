@@ -192,8 +192,15 @@ export function buildChampions(
         avatar: hero.avatar,
         lanes: mapLanes(hero.lane, warnings, context),
         roles: hero.roles.map((role) => ROLE_BY_ZH[role] ?? role),
+        ratings: hero.ratings,
       }
     })
+
+  const unrated = champions.filter((champion) => champion.ratings === null)
+  if (unrated.length > 0) {
+    const list = unrated.map((c) => `${c.heroId} ${c.name}`).join('; ')
+    warnings.push(`No complete official ratings for ${unrated.length} champion(s): ${list}`)
+  }
 
   const uncertain = champions.filter((champion) => champion.nameSource === 'fallback')
   if (uncertain.length > 0) {
@@ -208,7 +215,8 @@ export function buildChampions(
     warnings.push(`Champion ${prior.heroId} (${prior.name}) is no longer in Tencent's list; keeping its previous record`)
     if (usedSlugs.has(prior.slug)) continue
     usedSlugs.add(prior.slug)
-    champions.push(prior)
+    // Records written before ratings existed have no `ratings` key.
+    champions.push({ ...prior, ratings: prior.ratings ?? null })
   }
   champions.sort((a, b) => a.heroId - b.heroId)
 

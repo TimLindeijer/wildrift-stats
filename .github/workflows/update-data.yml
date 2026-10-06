@@ -79,7 +79,7 @@ jobs:
           case "$SNAPSHOT" in
             added) message="chore(data): add ranked snapshot $DATE" ;;
             updated) message="chore(data): update ranked snapshot $DATE" ;;
-            *) message='chore(data): update champion list' ;;
+            *) message='chore(data): update champion data' ;;
           esac
           git commit -q -m "$message"
           for attempt in 1 2 3 4 5; do

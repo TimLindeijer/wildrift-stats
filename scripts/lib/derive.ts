@@ -8,6 +8,7 @@ import { scoreRows, tierForScore } from '../../src/shared/tiers.ts'
 import type {
   BracketTable,
   Champion,
+  ChampionRatings,
   HistoryFile,
   HistoryPoint,
   LatestFile,
@@ -200,7 +201,7 @@ export function buildHistories(snapshots: readonly Snapshot[], heroIds: Iterable
 /** The champion fields the frontend uses, sorted by name. */
 export function publicChampions(champions: readonly Champion[]): PublicChampion[] {
   return champions
-    .map(({ heroId, slug, name, title, nameZh, avatar, lanes, roles }) => ({
+    .map(({ heroId, slug, name, title, nameZh, avatar, lanes, roles, ratings }) => ({
       heroId,
       slug,
       name,
@@ -209,6 +210,7 @@ export function publicChampions(champions: readonly Champion[]): PublicChampion[
       avatar,
       lanes,
       roles,
+      ratings: ratings ?? null,
     }))
     .sort((a, b) => a.name.localeCompare(b.name, 'en') || a.heroId - b.heroId)
 }
@@ -247,6 +249,25 @@ export function parsePatches(value: unknown): Patch[] {
   return patches.sort((a, b) => a.date.localeCompare(b.date))
 }
 
+const RATING_KEYS = ['difficulty', 'damage', 'toughness', 'utility'] as const satisfies readonly (keyof ChampionRatings)[]
+
+/** Valid 1–3 ratings, or null (records from before ratings existed, or hand-edited ones). */
+export function parseRatingsField(value: unknown): ChampionRatings | null {
+  if (typeof value !== 'object' || value === null) return null
+  const record = value as Record<string, unknown>
+  const valid = RATING_KEYS.every((key) => {
+    const rating = record[key]
+    return typeof rating === 'number' && Number.isInteger(rating) && rating >= 1 && rating <= 3
+  })
+  if (!valid) return null
+  return {
+    difficulty: record.difficulty as number,
+    damage: record.damage as number,
+    toughness: record.toughness as number,
+    utility: record.utility as number,
+  }
+}
+
 export function parseChampions(value: unknown): Champion[] {
   const champions = (value as { champions?: unknown } | null)?.champions
   if (!Array.isArray(champions)) throw new Error('champions.json must have a "champions" array')
@@ -261,5 +282,5 @@ export function parseChampions(value: unknown): Champion[] {
     slugs.add(champion.slug)
     ids.add(champion.heroId)
   }
-  return champions as Champion[]
+  return (champions as Champion[]).map((champion) => ({ ...champion, ratings: parseRatingsField(champion.ratings) }))
 }

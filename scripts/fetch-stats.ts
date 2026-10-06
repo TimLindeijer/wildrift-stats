@@ -1,28 +1,45 @@
 /**
  * Fetch today's Wild Rift ranked stats (China server) and store them as a dated snapshot.
  *
- *   node scripts/fetch-stats.ts [--data-dir data] [--raw-dir .raw] [--dry-run]
- *   node scripts/fetch-stats.ts --stats-file x.json --heroes-file y.json --ddragon-file z.json   # offline
+ *   node scripts/fetch-stats.ts [--data-dir data] [--raw-dir .raw] [--dry-run] [--no-base-stats]
+ *   node scripts/fetch-stats.ts --stats-file x.json --heroes-file y.json --ddragon-file z.json \
+ *     --hero-details-dir dir/   # offline
  *
- * Writes data/snapshots/<dtstatdate>.json (only when the stats changed) and data/champions.json
- * (only when it changed), so a scheduled run that finds nothing new leaves the tree untouched.
+ * Writes data/snapshots/<dtstatdate>.json (only when the stats changed), data/champions.json and
+ * data/base-stats.json (only when they changed), so a scheduled run that finds nothing new leaves
+ * the tree untouched. Base stats are best effort: champions whose file can't be loaded keep their
+ * previous values and the run only warns.
  */
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import { parseArgs } from 'node:util'
-import type { ChampionsFile, Patch } from '../src/shared/types.ts'
+import type { BaseStatsFile, ChampionsFile, Patch } from '../src/shared/types.ts'
 import { appendSummary, error as reportError, setOutput, warn } from './lib/actions.ts'
+import { mapSettled } from './lib/async.ts'
+import { mergeBaseStats, parseBaseStats } from './lib/baseStats.ts'
 import { buildChampions, indexDataDragon, type DataDragonIndex } from './lib/champions.ts'
 import { listFiles, readJsonFile, readTextFile, writeIfChanged } from './lib/fs.ts'
 import { describeError, fetchJson, fetchText, parseJsonText } from './lib/http.ts'
 import { formatJson } from './lib/json.ts'
-import { renderReport } from './lib/report.ts'
+import { renderReport, type BaseStatsStatus } from './lib/report.ts'
 import { buildSnapshot, isSnapshot, snapshotFileName, snapshotStatus } from './lib/snapshot.ts'
-import { HERO_LIST_URL, parseHeroList, parseRankList, SchemaError, STATS_URL, TENCENT_HEADERS } from './lib/tencent.ts'
+import {
+  HERO_LIST_URL,
+  heroDetailUrl,
+  parseHeroDetail,
+  parseHeroList,
+  parseRankList,
+  SchemaError,
+  STATS_URL,
+  TENCENT_HEADERS,
+  type ParsedHeroDetail,
+} from './lib/tencent.ts'
 
 const DDRAGON_VERSIONS_URL = 'https://ddragon.leagueoflegends.com/api/versions.json'
 const ddragonChampionUrl = (version: string) =>
   `https://ddragon.leagueoflegends.com/cdn/${version}/data/en_US/champion.json`
+/** Parallel requests for the ~140 champion files on Tencent's CDN. */
+const DETAIL_CONCURRENCY = 6
 
 const { values: args } = parseArgs({
   options: {
@@ -31,7 +48,9 @@ const { values: args } = parseArgs({
     'stats-file': { type: 'string' },
     'heroes-file': { type: 'string' },
     'ddragon-file': { type: 'string' },
+    'hero-details-dir': { type: 'string' },
     'no-ddragon': { type: 'boolean', default: false },
+    'no-base-stats': { type: 'boolean', default: false },
     'dry-run': { type: 'boolean', default: false },
   },
   strict: true,
@@ -76,6 +95,60 @@ async function latestStoredDate(): Promise<string | null> {
     .filter((date): date is string => Boolean(date))
     .sort()
   return dates.at(-1) ?? null
+}
+
+async function loadHeroDetail(heroId: number): Promise<ParsedHeroDetail> {
+  const dir = args['hero-details-dir']
+  if (!dir) return parseHeroDetail(await fetchJson(heroDetailUrl(heroId), { headers: TENCENT_HEADERS, retries: 2, log }), heroId)
+  const text = await readTextFile(join(dir, `${heroId}.json`)).catch(() => readTextFile(join(dir, `${heroId}.js`)))
+  return parseHeroDetail(parseJsonText(text, `champion file ${heroId}`), heroId)
+}
+
+interface BaseStatsResult {
+  status: BaseStatsStatus
+  file: BaseStatsFile | null
+}
+
+/** Refresh data/base-stats.json from each champion's file. Never throws for a single champion. */
+async function updateBaseStats(heroIds: readonly number[], warnings: string[]): Promise<BaseStatsResult> {
+  if (args['no-base-stats']) return { status: 'skipped', file: null }
+
+  const path = join(dataDir, 'base-stats.json')
+  let previous: BaseStatsFile | null = null
+  try {
+    const value = await readJsonFile(path)
+    if (value !== undefined) previous = parseBaseStats(value)
+  } catch (error) {
+    warnings.push(`Ignoring invalid data/base-stats.json (${describeError(error)}); rebuilding it`)
+  }
+
+  const results = await mapSettled(heroIds, DETAIL_CONCURRENCY, loadHeroDetail)
+  const details: ParsedHeroDetail[] = []
+  const failed: number[] = []
+  let firstError: unknown
+  results.forEach((result, index) => {
+    if (result.status === 'fulfilled') {
+      details.push(result.value)
+    } else {
+      failed.push(heroIds[index] as number)
+      firstError ??= result.reason
+    }
+  })
+  if (failed.length > 0) {
+    warnings.push(
+      `Couldn't load base stats for ${failed.length} of ${heroIds.length} champions (previous values kept): ` +
+        `${failed.join(', ')}. First error: ${describeError(firstError)}`,
+    )
+  }
+
+  const merged = mergeBaseStats(details, previous)
+  warnings.push(...merged.warnings)
+  const json = formatJson(merged.file, 160)
+  const changed = dryRun
+    ? (await readTextFile(path).catch(() => '')) !== json
+    : await writeIfChanged(path, json)
+  log(`Base stats: ${details.length}/${heroIds.length} champion files loaded; base-stats.json ${changed ? 'changed' : 'unchanged'}`)
+  return { status: changed ? 'changed' : 'unchanged', file: merged.file }
 }
 
 async function main(): Promise<void> {
@@ -130,6 +203,10 @@ async function main(): Promise<void> {
     if (status !== 'unchanged') await writeIfChanged(snapshotPath, formatJson(snapshot))
     championsChanged = await writeIfChanged(championsPath, championsJson)
   }
+  const baseStats = await updateBaseStats(
+    heroList.heroes.map((hero) => hero.heroId),
+    warnings,
+  )
 
   for (const message of warnings) warn(message)
   log(
@@ -144,12 +221,18 @@ async function main(): Promise<void> {
   await setOutput('date', snapshot.date)
   await setOutput('snapshot', status)
   await setOutput('champions', championsChanged ? 'changed' : 'unchanged')
+  await setOutput('base_stats', baseStats.status)
   await appendSummary(
     renderReport({
       snapshot,
       status,
       championsChanged,
       championCount: champions.length,
+      baseStats: {
+        status: baseStats.status,
+        championCount: baseStats.file?.champions.length ?? 0,
+        version: baseStats.file?.version ?? null,
+      },
       summary: parsed.summary,
       warnings,
       dryRun,

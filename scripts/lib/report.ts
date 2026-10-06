@@ -3,11 +3,14 @@ import type { Snapshot } from '../../src/shared/types.ts'
 import { summarizeBrackets, type SnapshotStatus } from './snapshot.ts'
 import type { RankListSummary } from './tencent.ts'
 
+export type BaseStatsStatus = 'changed' | 'unchanged' | 'skipped'
+
 export interface ReportInput {
   snapshot: Snapshot
   status: SnapshotStatus
   championsChanged: boolean
   championCount: number
+  baseStats: { status: BaseStatsStatus; championCount: number; version: string | null }
   summary: RankListSummary
   warnings: readonly string[]
   dryRun: boolean
@@ -17,6 +20,11 @@ function range(min: number | null, max: number | null): string {
   return min === null || max === null ? '–' : `${min} – ${max}`
 }
 
+function baseStatsLine({ status, championCount, version }: ReportInput['baseStats']): string {
+  if (status === 'skipped') return '- Base stats: **skipped**'
+  return `- Base stats: **${status}** (${championCount} champions${version ? `, game version ${version}` : ''})`
+}
+
 /** Markdown for $GITHUB_STEP_SUMMARY. */
 export function renderReport(input: ReportInput): string {
   const { snapshot, status, summary } = input
@@ -24,6 +32,7 @@ export function renderReport(input: ReportInput): string {
     `## Ranked snapshot ${snapshot.date}${input.dryRun ? ' (dry run)' : ''}`,
     '',
     `- Snapshot: **${status}**; champions.json: **${input.championsChanged ? 'changed' : 'unchanged'}** (${input.championCount} champions)`,
+    baseStatsLine(input.baseStats),
     `- Rows: ${summary.rowCount}; rank keys: ${summary.rankKeys.join(', ')}; lane keys: ${summary.laneKeys.join(', ')}` +
       (summary.emptyBrackets.length > 0 ? `; empty brackets: ${summary.emptyBrackets.join(', ')}` : ''),
     `- dtstatdate values: ${Object.entries(summary.dates)

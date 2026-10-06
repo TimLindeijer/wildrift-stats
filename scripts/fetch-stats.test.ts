@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import type { ChampionsFile, Snapshot } from '../src/shared/types.ts'
+import type { BaseStatsFile, ChampionsFile, Snapshot } from '../src/shared/types.ts'
 
 const script = fileURLToPath(new URL('./fetch-stats.ts', import.meta.url))
 const fixture = (name: string) => fileURLToPath(new URL(`./fixtures/${name}`, import.meta.url))
@@ -50,19 +50,42 @@ describe('fetch-stats CLI (offline fixtures)', () => {
   }
 
   it('writes a snapshot and champions.json, then is idempotent', async () => {
-    expect(await run('--dry-run')).toEqual({ date: '2026-10-03', snapshot: 'added', champions: 'changed' })
+    const details = ['--hero-details-dir', fixture('hero_details')]
+    const added = { date: '2026-10-03', snapshot: 'added', champions: 'changed', base_stats: 'changed' }
+    expect(await run('--dry-run', ...details)).toEqual(added)
     expect(await readdir(dir)).not.toContain('snapshots')
+    expect(await readdir(dir)).not.toContain('base-stats.json')
 
-    expect(await run()).toEqual({ date: '2026-10-03', snapshot: 'added', champions: 'changed' })
+    expect(await run(...details)).toEqual(added)
     const snapshotPath = join(dir, 'snapshots', '2026-10-03.json')
     const snapshot = JSON.parse(await readFile(snapshotPath, 'utf8')) as Snapshot
     expect(snapshot.brackets.all?.mid?.length).toBe(6)
     const champions = JSON.parse(await readFile(join(dir, 'champions.json'), 'utf8')) as ChampionsFile
     expect(champions.champions).toHaveLength(25)
     expect(champions.champions.every((c) => c.nameSource !== 'fallback')).toBe(true)
+    expect(champions.champions.every((c) => c.ratings !== null)).toBe(true)
+    // Only Garen has a fixture file; the other champions fail without failing the run.
+    const baseStats = JSON.parse(await readFile(join(dir, 'base-stats.json'), 'utf8')) as BaseStatsFile
+    expect(baseStats).toMatchObject({ schema: 1, version: '7.3' })
+    expect(baseStats.champions).toEqual([expect.objectContaining({ heroId: 10001, hp: [690, 128], ms: 350 })])
 
     const before = await readFile(snapshotPath, 'utf8')
-    expect(await run()).toEqual({ date: '2026-10-03', snapshot: 'unchanged', champions: 'unchanged' })
+    expect(await run(...details)).toEqual({
+      date: '2026-10-03',
+      snapshot: 'unchanged',
+      champions: 'unchanged',
+      base_stats: 'unchanged',
+    })
     expect(await readFile(snapshotPath, 'utf8')).toBe(before)
+  }, 30_000)
+
+  it('can skip base stats', async () => {
+    expect(await run('--no-base-stats')).toEqual({
+      date: '2026-10-03',
+      snapshot: 'added',
+      champions: 'changed',
+      base_stats: 'skipped',
+    })
+    expect(await readdir(dir)).not.toContain('base-stats.json')
   }, 30_000)
 })

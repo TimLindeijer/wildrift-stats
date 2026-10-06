@@ -41,6 +41,17 @@ export interface Snapshot {
 
 export type NameSource = 'ddragon' | 'override' | 'fallback'
 
+/**
+ * Tencent's official 1–3 ratings from the champion list (3 = most). The source fields are
+ * `difficultyL` (难度), `damage` (伤害), `surviveL` (生存) and `assistL` (辅助).
+ */
+export interface ChampionRatings {
+  difficulty: number
+  damage: number
+  toughness: number
+  utility: number
+}
+
 export interface Champion {
   heroId: number
   slug: string
@@ -60,6 +71,8 @@ export interface Champion {
   lanes: Lane[]
   /** Champion classes, e.g. "Fighter". */
   roles: string[]
+  /** Official ratings; null when Tencent's list doesn't have all four. */
+  ratings: ChampionRatings | null
 }
 
 /** data/champions.json */
@@ -76,6 +89,37 @@ export interface Patch {
   url?: string
 }
 
+/** [value at level 1, gain per level-up] */
+export type StatGrowth = [base: number, perLevel: number]
+
+/** One champion's base stats from Tencent's champion file. Regeneration is per 5 seconds. */
+export interface BaseStats {
+  heroId: number
+  hp: StatGrowth
+  hpRegen: StatGrowth
+  /** Null for champions with no mana (Tencent reports 0; some of them use energy or nothing). */
+  mana: StatGrowth | null
+  manaRegen: StatGrowth | null
+  ad: StatGrowth
+  armor: StatGrowth
+  mr: StatGrowth
+  ms: number
+}
+
+/** data/base-stats.json, copied as is to public/data/base-stats.json. */
+export interface BaseStatsFile {
+  schema: 1
+  /** Game version reported by Tencent's champion files. */
+  version: string | null
+  /**
+   * Growth multiplier of each level-up, index 0 = level 1 (always 0): a stat at level n is
+   * base + perLevel × (growth[1] + … + growth[n − 1]). Empty when no base stats are known.
+   */
+  growth: number[]
+  /** Sorted by heroId. */
+  champions: BaseStats[]
+}
+
 /* ------------------------------------------------------------------ */
 /* Derived files, generated into public/data/ by `npm run data:build`  */
 /* ------------------------------------------------------------------ */
@@ -84,7 +128,10 @@ export const TIERS = ['S+', 'S', 'A', 'B', 'C', 'D'] as const
 export type Tier = (typeof TIERS)[number]
 
 /** Champion fields the frontend needs (public/data/champions.json). */
-export type PublicChampion = Pick<Champion, 'heroId' | 'slug' | 'name' | 'title' | 'nameZh' | 'avatar' | 'lanes' | 'roles'>
+export type PublicChampion = Pick<
+  Champion,
+  'heroId' | 'slug' | 'name' | 'title' | 'nameZh' | 'avatar' | 'lanes' | 'roles' | 'ratings'
+>
 
 export interface PublicChampionsFile {
   schema: 1

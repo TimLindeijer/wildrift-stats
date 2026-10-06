@@ -3,13 +3,14 @@
  *
  *   node scripts/build-data.ts [--data-dir data] [--out public/data]
  *
- * Reads data/snapshots/*.json, data/champions.json and data/patches.json, empties the output
- * directory and writes:
+ * Reads data/snapshots/*.json, data/champions.json, data/patches.json and data/base-stats.json,
+ * empties the output directory and writes:
  *   latest.json        newest snapshot with tiers and changes vs the previous one (every page)
  *   movers.json        win-rate changes over 1 day, 7 days, 30 days and the current patch
  *   history/<id>.json  one champion's daily series, loaded on demand
  *   champions.json     the champion fields the frontend uses
  *   patches.json       patch dates for chart markers
+ *   base-stats.json    official base stats (an empty list until the fetcher has stored them)
  *
  * `npm run dev` and `npm run build` run this first; Vite then serves/copies public/ as is.
  */
@@ -17,6 +18,7 @@ import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import { parseArgs } from 'node:util'
 import type { PublicChampionsFile, Snapshot } from '../src/shared/types.ts'
+import { EMPTY_BASE_STATS, parseBaseStats } from './lib/baseStats.ts'
 import { describeError } from './lib/http.ts'
 import { buildHistories, buildLatest, buildMovers, forEachLane, parseChampions, parsePatches, publicChampions } from './lib/derive.ts'
 import { listFiles, readJsonFile } from './lib/fs.ts'
@@ -70,6 +72,8 @@ async function main(): Promise<void> {
   const snapshots = await loadSnapshots()
   const champions = parseChampions(await readRequired(join(dataDir, 'champions.json')))
   const patches = parsePatches(await readRequired(join(dataDir, 'patches.json')))
+  const baseStatsSource = await readJsonFile(join(dataDir, 'base-stats.json'))
+  const baseStats = baseStatsSource === undefined ? EMPTY_BASE_STATS : parseBaseStats(baseStatsSource)
 
   const known = new Set(champions.map((champion) => champion.heroId))
   const latest = buildLatest(snapshots)
@@ -86,6 +90,7 @@ async function main(): Promise<void> {
   await writeJson('movers.json', buildMovers(snapshots, patches))
   await writeJson('champions.json', { schema: 1, champions: publicChampions(champions) } satisfies PublicChampionsFile)
   await writeJson('patches.json', patches)
+  await writeJson('base-stats.json', baseStats)
   for (const history of buildHistories(snapshots, known)) {
     await writeJson(join('history', `${history.heroId}.json`), history)
   }

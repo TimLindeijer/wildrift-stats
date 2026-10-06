@@ -3,12 +3,16 @@
  * Everything here throws SchemaError on unexpected shapes so the scheduled job fails loudly.
  */
 import { BRACKETS, LANES, type Bracket, type Lane } from '../../src/shared/constants.ts'
-import type { BracketTable, SnapshotRow } from '../../src/shared/types.ts'
+import type { BaseStats, BracketTable, ChampionRatings, SnapshotRow, StatGrowth } from '../../src/shared/types.ts'
 
 export const STATS_URL = 'https://mlol.qt.qq.com/go/lgame_battle_info/hero_rank_list_v2'
 export const HERO_LIST_URL = 'https://game.gtimg.cn/images/lgamem/act/lrlib/js/heroList/hero_list.js'
 export const HERO_HISTORY_URL = 'https://mlol.qt.qq.com/go/lgame_battle_info/hero_rank_data_v2'
 export const STATS_SOURCE = 'tencent:hero_rank_list_v2'
+
+/** One champion's file in Tencent's champion library (plain JSON despite the .js name). */
+export const heroDetailUrl = (heroId: number): string =>
+  `https://game.gtimg.cn/images/lgamem/act/lrlib/js/hero/${heroId}.js`
 
 export const TENCENT_HEADERS: Record<string, string> = {
   'User-Agent':
@@ -234,6 +238,7 @@ export interface RawHero {
   lane: string
   avatar: string
   poster: string
+  ratings: ChampionRatings | null
 }
 
 export interface ParsedHeroList {
@@ -244,6 +249,25 @@ export interface ParsedHeroList {
 function requireString(value: unknown, path: string): string {
   if (typeof value !== 'string') throw new SchemaError(`${path} is not a string: ${JSON.stringify(value)}`)
   return value
+}
+
+/** Our rating names → Tencent's fields (难度, 伤害, 生存, 辅助). */
+export const RATING_FIELDS: Readonly<Record<keyof ChampionRatings, string>> = {
+  difficulty: 'difficultyL',
+  damage: 'damage',
+  toughness: 'surviveL',
+  utility: 'assistL',
+}
+
+/** Tencent's official 1–3 ratings, or null unless all four are present and in range. */
+export function parseRatings(raw: JsonObject): ChampionRatings | null {
+  const ratings: Partial<ChampionRatings> = {}
+  for (const [name, field] of Object.entries(RATING_FIELDS) as [keyof ChampionRatings, string][]) {
+    const value = optionalNumber(raw[field])
+    if (value === null || !Number.isInteger(value) || value < 1 || value > 3) return null
+    ratings[name] = value
+  }
+  return ratings as ChampionRatings
 }
 
 /** Minimum number of champions for a hero list to be considered complete enough to use. */
@@ -266,8 +290,74 @@ export function parseHeroList(json: unknown): ParsedHeroList {
       lane: typeof raw.lane === 'string' ? raw.lane : '',
       avatar: requireString(raw.avatar, `${path}.avatar`),
       poster: typeof raw.poster === 'string' ? raw.poster : '',
+      ratings: parseRatings(raw),
     }
   })
   heroes.sort((a, b) => a.heroId - b.heroId)
   return { heroes, version: typeof json.version === 'string' ? json.version : null }
+}
+
+/** Wild Rift's level cap: growth multipliers cover levels 1–15. */
+export const MAX_LEVEL = 15
+
+/** Tencent stores base stats as fixed-point integers (×10 000), except move speed (×100). */
+const FIXED_POINT = 10_000
+const SPEED_SCALE = 100
+
+export interface ParsedHeroDetail {
+  stats: BaseStats
+  /** Growth multiplier of each level-up, index 0 = level 1 (see BaseStatsFile.growth). */
+  growth: number[]
+  version: string | null
+}
+
+/**
+ * Validate one champion file (`lrlib/js/hero/<heroId>.js`) and scale its base stats. Skipped on
+ * purpose: attack speed (the file has no base value we can verify), crit, and the always-zero
+ * `magic`, `durability` and `mobility` fields.
+ */
+export function parseHeroDetail(json: unknown, expectedHeroId?: number): ParsedHeroDetail {
+  if (!isObject(json) || !isObject(json.hero)) throw new SchemaError('Champion file has no "hero" object')
+  const hero = json.hero
+  const heroId = toHeroId(hero.heroId, 'hero.heroId')
+  if (expectedHeroId !== undefined && heroId !== expectedHeroId) {
+    throw new SchemaError(`Champion file for ${expectedHeroId} describes hero ${heroId}`)
+  }
+
+  const scaled = (field: string, scale = FIXED_POINT): number => {
+    const value = toFiniteNumber(hero[field], `hero.${field}`) / scale
+    if (value < 0) throw new SchemaError(`hero.${field} is negative: ${JSON.stringify(hero[field])}`)
+    return Math.round(value * 100) / 100
+  }
+  const stat = (base: string, perLevel: string): StatGrowth => [scaled(base), scaled(perLevel)]
+  const inRange = (value: number, min: number, max: number, field: string) => {
+    if (value < min || value > max) {
+      throw new SchemaError(`hero.${field} = ${value} after scaling is outside ${min}..${max} (did the unit change?)`)
+    }
+  }
+
+  const hasMana = scaled('mp') > 0
+  const stats: BaseStats = {
+    heroId,
+    hp: stat('hp', 'hpperlevel'),
+    hpRegen: stat('hpregen', 'hpregenperlevel'),
+    mana: hasMana ? stat('mp', 'mpperlevel') : null,
+    manaRegen: hasMana ? stat('mpregen', 'mpregenperlevel') : null,
+    ad: stat('attack', 'attackperlevel'),
+    armor: stat('armor', 'armorperlevel'),
+    mr: stat('spellblock', 'spellblockperlevel'),
+    ms: scaled('movespeed', SPEED_SCALE),
+  }
+  inRange(stats.hp[0], 200, 2_000, 'hp')
+  inRange(stats.ad[0], 10, 200, 'attack')
+  inRange(stats.ms, 200, 500, 'movespeed')
+
+  const growth = Array.from({ length: MAX_LEVEL }, (_, index) => {
+    const field = `growthfix${index + 1}`
+    const value = toFiniteNumber(hero[field], `hero.${field}`) / FIXED_POINT
+    if (value < 0 || value > 5) throw new SchemaError(`hero.${field} = ${JSON.stringify(hero[field])} is out of range`)
+    return Math.round(value * 10_000) / 10_000
+  })
+
+  return { stats, growth, version: typeof json.version === 'string' ? json.version : null }
 }

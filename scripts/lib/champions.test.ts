@@ -27,6 +27,7 @@ const hero = (heroId: number, key: string, extra: Partial<RawHero> = {}): RawHer
   lane: '中路',
   avatar: `https://game.gtimg.cn/H_S_${heroId}.png`,
   poster: `https://game.gtimg.cn/Posters/${key}_0.jpg`,
+  ratings: { difficulty: 2, damage: 2, toughness: 2, utility: 2 },
   ...extra,
 })
 
@@ -137,5 +138,17 @@ describe('buildChampions', () => {
     const { champions, warnings } = buildChampions([hero(1, 'Garen')], ddragon(), previous)
     expect(champions.map((c) => c.heroId)).toEqual([1, 2])
     expect(warnings.some((w) => w.includes('no longer in'))).toBe(true)
+  })
+
+  it('keeps official ratings and warns about champions without them', () => {
+    const { champions, warnings } = buildChampions([hero(1, 'Garen'), hero(2, 'Ahri', { ratings: null })], ddragon())
+    expect(champions.map((c) => c.ratings)).toEqual([{ difficulty: 2, damage: 2, toughness: 2, utility: 2 }, null])
+    expect(warnings).toEqual(['No complete official ratings for 1 champion(s): 2 Ahri'])
+  })
+
+  it('gives records from before ratings existed a null rating', () => {
+    const { ratings: _ratings, ...old } = buildChampions([hero(2, 'Ahri')], ddragon()).champions[0]!
+    const { champions } = buildChampions([hero(1, 'Garen')], ddragon(), [old as Champion])
+    expect(champions[1]).toMatchObject({ heroId: 2, ratings: null })
   })
 })

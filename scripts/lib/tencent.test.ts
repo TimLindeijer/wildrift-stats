@@ -1,7 +1,16 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { BRACKETS, LANES } from '../../src/shared/constants.ts'
-import { fractionToPercent, parseHeroList, parseRankList, parseStatDate, SchemaError } from './tencent.ts'
+import {
+  fractionToPercent,
+  heroDetailUrl,
+  parseHeroDetail,
+  parseHeroList,
+  parseRankList,
+  parseRatings,
+  parseStatDate,
+  SchemaError,
+} from './tencent.ts'
 
 const fixture = (name: string): unknown =>
   JSON.parse(readFileSync(new URL(`../fixtures/${name}`, import.meta.url), 'utf8'))
@@ -167,8 +176,84 @@ describe('parseHeroList', () => {
     expect(heroes.map((h) => h.heroId)).toEqual([...heroes.map((h) => h.heroId)].sort((a, b) => a - b))
   })
 
+  it('keeps the official 1–3 ratings', () => {
+    const { heroes } = parseHeroList(fixture('hero_list.json'))
+    // Garen: difficultyL 1, damage 2, surviveL 3, assistL 1.
+    expect(heroes[0]?.ratings).toEqual({ difficulty: 1, damage: 2, toughness: 3, utility: 1 })
+    expect(heroes.every((hero) => hero.ratings !== null)).toBe(true)
+  })
+
   it('rejects broken lists', () => {
     expect(() => parseHeroList({})).toThrow(SchemaError)
     expect(() => parseHeroList({ heroList: { '1': { heroId: '1', name: 'x', avatar: 'a' } } })).toThrow('only has 1')
+  })
+})
+
+describe('parseRatings', () => {
+  const raw = { difficultyL: '2', damage: 3, surviveL: '1', assistL: '3' }
+
+  it('accepts numbers and numeric strings from 1 to 3', () => {
+    expect(parseRatings(raw)).toEqual({ difficulty: 2, damage: 3, toughness: 1, utility: 3 })
+  })
+
+  it('returns null when any rating is missing or out of range', () => {
+    expect(parseRatings({ ...raw, assistL: undefined })).toBeNull()
+    expect(parseRatings({ ...raw, damage: '0' })).toBeNull()
+    expect(parseRatings({ ...raw, damage: '4' })).toBeNull()
+    expect(parseRatings({ ...raw, surviveL: '1.5' })).toBeNull()
+    expect(parseRatings({ ...raw, difficultyL: '' })).toBeNull()
+  })
+})
+
+describe('parseHeroDetail', () => {
+  const garen = () => structuredClone(fixture('hero_details/10001.json')) as { hero: Record<string, unknown>; version: string }
+
+  it('scales the fixed-point base stats', () => {
+    const { stats, growth, version } = parseHeroDetail(garen(), 10001)
+    expect(stats).toEqual({
+      heroId: 10001,
+      hp: [690, 128],
+      hpRegen: [7.5, 0.55],
+      mana: null,
+      manaRegen: null,
+      ad: [64, 5.5],
+      armor: [44, 5],
+      mr: [38, 2.6],
+      ms: 350,
+    })
+    expect(version).toBe('7.3')
+    expect(growth).toHaveLength(15)
+    expect(growth[0]).toBe(0)
+    expect(growth[1]).toBe(0.74)
+    expect(growth.reduce((sum, value) => sum + value, 0)).toBeCloseTo(14)
+  })
+
+  it('keeps mana for mana users and rounds to two decimals', () => {
+    const json = garen()
+    Object.assign(json.hero, { mp: '4350000', mpperlevel: '490000', mpregen: '180000', mpregenperlevel: '11000', hp: '6299999' })
+    const { stats } = parseHeroDetail(json)
+    expect(stats.mana).toEqual([435, 49])
+    expect(stats.manaRegen).toEqual([18, 1.1])
+    expect(stats.hp[0]).toBe(630)
+  })
+
+  it('fails loudly on a wrong champion, missing fields or a changed unit', () => {
+    expect(() => parseHeroDetail(garen(), 10002)).toThrow('describes hero 10001')
+    expect(() => parseHeroDetail({ spells: [] })).toThrow(SchemaError)
+    const missing = garen()
+    delete missing.hero.armor
+    expect(() => parseHeroDetail(missing)).toThrow(SchemaError)
+    const unscaled = garen()
+    unscaled.hero.hp = '690'
+    expect(() => parseHeroDetail(unscaled)).toThrow('did the unit change')
+    const negative = garen()
+    negative.hero.armorperlevel = '-5'
+    expect(() => parseHeroDetail(negative)).toThrow('negative')
+  })
+})
+
+describe('heroDetailUrl', () => {
+  it('points at the champion library file', () => {
+    expect(heroDetailUrl(10001)).toBe('https://game.gtimg.cn/images/lgamem/act/lrlib/js/hero/10001.js')
   })
 })
