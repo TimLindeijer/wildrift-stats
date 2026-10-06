@@ -9,10 +9,12 @@ The numbers come from Tencent's public ranked stats for the **China server**. Ri
 ## What's on the site
 
 - **Tier list**: every champion by rank bracket (All, Diamond+, Master+, Challenger+, Legendary) and role (Baron, Jungle, Mid, Duo, Support), with search and sortable tier, win, pick, ban and change columns.
-- **Champion pages**: current numbers and changes, win, pick and ban rate charts with dashed lines at patch releases, and a matrix of every role and bracket.
+- **Champions**: Tencent's official 1–3 ratings (difficulty, damage, toughness, utility) and base stats at level 1 or 15 for every champion, sortable and searchable.
+- **Champion pages**: current numbers and changes; how often the champion is picked or banned, how its games split between roles and how its win rate in the chosen bracket compares with all ranks; win, pick and ban rate charts with dashed lines at patch releases; a matrix of every role and bracket; and its ratings and base stats.
 - **Compare**: up to six champions on one chart, by win rate, pick rate, ban rate or tier score.
 - **Movers**: the biggest win-rate gains and drops over 1, 7 or 30 days, or since the current patch.
-- **About**: the data source, units and how tiers work.
+- **Insights**: the most contested champions (picked or banned in the most games), flex picks that play more than one role, and who does better or worse in high elo than across all ranks.
+- **About**: the data source, units, and how tiers and insights work.
 
 Filters are kept in the URL, so every view can be shared or bookmarked.
 
@@ -28,7 +30,7 @@ flowchart LR
 ```
 
 1. `update-data.yml` runs at 02:41 and 14:41 UTC. Tencent publishes the previous day's stats at about 02:00 UTC; the second run is a safety net.
-2. `scripts/fetch-stats.ts` fetches the stats and the champion list, validates them and writes `data/snapshots/<date>.json` and `data/champions.json`. The date is Tencent's stats date (`dtstatdate`), not the day of the run. Files are only written when their content changes, so a run with nothing new commits nothing.
+2. `scripts/fetch-stats.ts` fetches the stats, the champion list and each champion's base stats, validates them and writes `data/snapshots/<date>.json`, `data/champions.json` and `data/base-stats.json`. The date is Tencent's stats date (`dtstatdate`), not the day of the run. Files are only written when their content changes, so a run with nothing new commits nothing. Base stats are best effort: a champion whose file fails to load keeps its previous values, and the run only warns.
 3. When data changed, the job commits it as `github-actions[bot]` (`chore(data): add ranked snapshot YYYY-MM-DD`), rebasing before it pushes, and then calls `deploy-pages.yml` to build and deploy that commit. It has to call the deploy directly because pushes made with the workflow's `GITHUB_TOKEN` don't trigger `push` workflows.
 4. `npm run build` first runs `scripts/build-data.ts`, which turns the snapshots into the small files the frontend loads, and then builds the app with Vite.
 
@@ -39,7 +41,8 @@ If the response changes shape (`result` isn't 0, the data is laid out differentl
 | What | Where |
 | --- | --- |
 | Ranked stats | `https://mlol.qt.qq.com/go/lgame_battle_info/hero_rank_list_v2` |
-| Champion list (Chinese names, icons, lanes) | `https://game.gtimg.cn/images/lgamem/act/lrlib/js/heroList/hero_list.js` |
+| Champion list (Chinese names, icons, lanes, ratings) | `https://game.gtimg.cn/images/lgamem/act/lrlib/js/heroList/hero_list.js` |
+| Base stats, one file per champion | `https://game.gtimg.cn/images/lgamem/act/lrlib/js/hero/<heroId>.js` |
 | English names | Riot Data Dragon `champion.json` |
 
 The stats arrive as `data[rank][lane] = rows`:
@@ -55,7 +58,15 @@ What the real data showed:
 - The ban rate is per champion, so it's the same in every role.
 - Values are strings, sometimes in scientific notation (`"9.75E-4"`).
 - `strength` is Tencent's rank within the role (1 is best) and `strength_level` (0–5) splits that ranking into fixed-size groups that lean heavily on popularity. The site shows them as "CN tier" for reference and doesn't use them for its own tiers.
+- The `*_bzc` fields (`win_bzc`, `appear_bzc`, `forbid_bzc`) aren't baselines: they're the champion's rank within the role by that rate. The `*_float` fields look like day-over-day changes in those ranks. The site stores neither, since it can rank by any rate itself and works out changes from its own history.
 - The per-champion endpoint `hero_rank_data_v2` also returns only the current day, so earlier history **can't be backfilled**. `npm run probe:history`, or the `probe_history` workflow option, prints what it returns.
+
+What the champion files showed:
+
+- The champion list rates every champion from 1 to 3 in `difficultyL`, `damage`, `surviveL` and `assistL`. The site calls the last two toughness and utility.
+- Each champion's file has its level 1 stats and their growth per level as separate fields (`hp` and `hpperlevel`, and so on), stored ×10,000 (move speed ×100). Regeneration is per 5 seconds. Champions without mana (23 of 142 in October 2026) report 0, which the site stores as `null`.
+- Level-ups are scaled by multipliers that rise from 0.74 at level 2 to 1.26 at level 15 and average 1, so a stat at level 15 is its level 1 value plus 14 times the per-level value. Tencent doesn't document this; it's inferred from the data.
+- The files also hold attack speed, a critical strike value and each ability's description (in Chinese), cooldowns and costs, which the site doesn't show. They have no attack range.
 
 English names come from each champion's poster file name (`.../Posters/Garen_0.jpg` gives `Garen`), matched case-insensitively against Data Dragon ids (`MonkeyKing` is Wukong). Champions Data Dragon doesn't know, such as the Wild Rift–only Norra, use `NAME_OVERRIDES` in `scripts/lib/champions.ts`, and anything left over falls back to splitting the CamelCase key. The fetcher warns in the job summary about every champion without a confident name. If Data Dragon is unreachable, it keeps the names it resolved before.
 
@@ -69,6 +80,7 @@ All rates are stored as **percentages with two decimals**: `51.23` means 51.23%.
 - **Ranked only.** There's no public source for ARAM or other modes.
 - **History starts on 2026-10-04**, the first day the job ran, and can't be backfilled. Trend charts appear once a role and bracket has three daily snapshots.
 - **Legendary has no data** in Tencent's responses so far.
+- **No builds, items, runes, KDA, matchups, synergies or stats by game length** (early vs late game). None of them are in Tencent's public data, and there's no other public source for Wild Rift.
 - **Tencent can change or remove the endpoint** at any time. The update job then fails loudly, and the site keeps the last good data.
 - Patch dates are maintained by hand (see [Adding a patch](#adding-a-patch)).
 
@@ -93,6 +105,14 @@ A percentile runs from 0 (lowest in the role) to 1 (highest), and ties share the
 
 The weights and thresholds are in `src/shared/tiers.ts`. Because the score is relative, a tier says how a champion ranks in its role that day, not whether it wins more than half its games.
 
+## Insights
+
+The Insights page and the champion pages work these out from the latest snapshot (`src/lib/insights.ts`):
+
+- **Picked or banned**: a champion's pick rates in all its listed roles plus its ban rate. Ranked uses draft pick, so a champion is in a game at most once, and the sum is the share of games in which it was picked or banned. Tencent lists a role only once its pick rate reaches about 1%, so this can be slightly low.
+- **Role split**: how a champion's listed games divide between its roles. A **flex pick** plays at least 20% of its games in its second role (`MIN_FLEX_SHARE`).
+- **High elo vs all ranks**: win rate in a higher bracket (Master+ by default) minus win rate across all ranks, in the same role on the same day, in percentage points. Higher brackets play far fewer games, so the Insights lists only include roles picked in at least 2% of games in both brackets (`MIN_ELO_PICK`), and champion pages mark smaller samples.
+
 ## Data files
 
 Committed by the update job:
@@ -100,7 +120,8 @@ Committed by the update job:
 | File | Contents |
 | --- | --- |
 | `data/snapshots/YYYY-MM-DD.json` | One day's stats: `brackets[bracket][lane]` holds `{ heroId, win, pick, ban, strength, strengthLevel }` rows, plus `date`, `fetchedAt` and `source`. About 70 KB a day. |
-| `data/champions.json` | `heroId`, English `name` and `title`, `slug`, Chinese `nameZh`, `avatar` URL, `lanes` and `roles` for every champion. |
+| `data/champions.json` | `heroId`, English `name` and `title`, `slug`, Chinese `nameZh`, `avatar` URL, `lanes`, `roles` and Tencent's 1–3 `ratings` (`difficulty`, `damage`, `toughness`, `utility`, or `null` if any is missing) for every champion. |
+| `data/base-stats.json` | The game `version`, the level `growth` multipliers, and each champion's base stats as `[level 1, per level]` pairs: `hp`, `hpRegen`, `mana` and `manaRegen` (`null` without mana), `ad`, `armor` and `mr`, plus `ms`, the move speed, as a single number. About 20 KB. |
 | `data/patches.json` | Patch versions and release dates for chart markers and the "since patch" Movers window. Edited by hand. |
 
 Built into `public/data/` by `npm run data:build`. These files aren't committed; `npm run dev` and `npm run build` rebuild them.
@@ -109,6 +130,7 @@ Built into `public/data/` by `npm run data:build`. These files aren't committed;
 | --- | --- | --- |
 | `latest.json` | every page | The latest snapshot with tiers, scores and changes since the previous snapshot, plus the list of snapshot dates. It stays about the same size as history grows. |
 | `champions.json`, `patches.json` | every page | Trimmed copies of the files above. |
+| `base-stats.json` | Champions and champion pages | A copy of `data/base-stats.json`, with no champions until the first fetch writes that file. |
 | `movers.json` | Movers | Win-rate changes for each window. |
 | `history/<heroId>.json` | champion and Compare pages | The champion's daily `[date, win, pick, ban, score]` points for each bracket and role. Loaded only when needed. A year of daily points is about 65 KB per champion on average (up to about 150 KB for champions played in several roles), or about 17 KB gzipped. |
 
@@ -131,6 +153,7 @@ The data scripts are TypeScript run directly by Node, and the fetcher only uses 
 ```sh
 npm run fetch                     # fetch live stats and update data/
 npm run fetch -- --dry-run        # fetch and report, write nothing
+npm run fetch -- --no-base-stats  # skip the ~140 per-champion base stats requests
 npm run fetch -- --raw-dir .raw   # also keep the raw responses
 npm run fetch:fixtures            # offline dry run against scripts/fixtures/
 npm run data:build                # rebuild public/data/ from data/
