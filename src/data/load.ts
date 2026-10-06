@@ -5,6 +5,7 @@ import type {
   LatestFile,
   MoversFile,
   Patch,
+  PublicAbilitiesFile,
   PublicChampion,
   PublicChampionsFile,
 } from '../shared/types.ts'
@@ -123,4 +124,9 @@ export function loadBaseStats(version: string): Promise<BaseStatsData> {
     const file = expectSchema<BaseStatsFile>(await fetchJson(path), 'base-stats.json')
     return { file, byId: new Map(file.champions.map((stats) => [stats.heroId, stats])) }
   })
+}
+
+export function loadAbilities(heroId: number, version: string): Promise<PublicAbilitiesFile> {
+  const path = `abilities/${heroId}.json?v=${encodeURIComponent(version)}`
+  return cached(path, async () => expectSchema<PublicAbilitiesFile>(await fetchJson(path), `abilities/${heroId}.json`))
 }

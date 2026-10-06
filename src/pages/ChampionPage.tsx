@@ -1,5 +1,6 @@
 import { Suspense, useId, useRef } from 'react'
 import { Link, useParams } from 'react-router'
+import { AbilityList } from '../components/AbilityList.tsx'
 import { ChampionIcon } from '../components/ChampionIcon.tsx'
 import { Delta } from '../components/Delta.tsx'
 import { ErrorBoundary } from '../components/ErrorBoundary.tsx'
@@ -8,8 +9,9 @@ import { Segmented } from '../components/Segmented.tsx'
 import { EmptyState, ErrorState, PageLoading } from '../components/States.tsx'
 import { TierBadge, TierChange } from '../components/TierBadge.tsx'
 import { TrendChart } from '../components/TrendChart.tsx'
-import { useBaseStats, useCoreData, useHistory } from '../data/hooks.ts'
+import { useAbilities, useBaseStats, useCoreData, useHistory } from '../data/hooks.ts'
 import { usePrefersReducedMotion, useQueryParams } from '../hooks/index.ts'
+import { hasEnglishText, usesGenericResource } from '../lib/abilities.ts'
 import { MIN_CHART_POINTS, metricSeries } from '../lib/chart.ts'
 import { bracketsWithData, findLatestRow, lanesWithData, mainLane } from '../lib/champion.ts'
 import { formatLongDate, formatPct } from '../lib/format.ts'
@@ -23,6 +25,7 @@ import {
   BRACKET_SHORT_LABELS,
   LANES,
   LANE_LABELS,
+  OFFICIAL_CHAMPIONS_URL,
   isBracket,
   isLane,
   type Bracket,
@@ -413,6 +416,55 @@ function ProfileSection({ champion }: { champion: PublicChampion }) {
   )
 }
 
+function AbilitiesContent({ champion }: { champion: PublicChampion }) {
+  const { page, abilities } = useAbilities(champion.heroId)
+  if (abilities.length === 0) {
+    return (
+      <EmptyState title="Abilities aren’t available yet">
+        <p>{`Neither the official Wild Rift site nor Tencent’s champion files list ${champion.name}’s abilities yet. They’ll appear after a daily update finds them.`}</p>
+      </EmptyState>
+    )
+  }
+  return (
+    <>
+      {!hasEnglishText(abilities) && (
+        <p className="abilities__note">
+          The official site doesn’t list this champion yet, so the names are Tencent’s Chinese ones.
+        </p>
+      )}
+      <AbilityList abilities={abilities} />
+      {usesGenericResource(abilities) && (
+        <p className="abilities__note">
+          “Resource” is the champion’s own resource, such as energy or fury. Tencent’s data doesn’t say which.
+        </p>
+      )}
+      {page && (
+        <p className="abilities__note">
+          <a href={`${OFFICIAL_CHAMPIONS_URL}${page}/`}>{`${champion.name} on the official Wild Rift site`}</a>
+        </p>
+      )}
+    </>
+  )
+}
+
+function AbilitiesSection({ champion }: { champion: PublicChampion }) {
+  const id = useId()
+  return (
+    <section className="section" aria-labelledby={`${id}-abilities`}>
+      <h2 id={`${id}-abilities`}>Abilities</h2>
+      <p className="section__note">
+        Descriptions, icons and previews come from the official Wild Rift site. Cooldowns and costs come from Tencent’s
+        China-server game data and can differ on other servers.
+      </p>
+      <ErrorBoundary fallback={(error, retry) => <ErrorState error={error} retry={retry} />}>
+        <Suspense fallback={<PageLoading label="Loading abilities…" />}>
+          <AbilitiesContent champion={champion} />
+        </Suspense>
+      </ErrorBoundary>
+    </section>
+  )
+}
+
 function ChampionView({ champion }: { champion: PublicChampion }) {
   return (
     <>
@@ -435,6 +487,7 @@ function ChampionView({ champion }: { champion: PublicChampion }) {
         <ChampionStats champion={champion} />
       </Suspense>
       <ProfileSection champion={champion} />
+      <AbilitiesSection champion={champion} />
     </>
   )
 }

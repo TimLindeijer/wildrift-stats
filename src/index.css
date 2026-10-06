@@ -1367,6 +1367,132 @@ a.mover__name:hover {
   min-width: min(100%, 32rem);
 }
 
+/* Abilities */
+
+.abilities {
+  max-width: 52rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ability {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 0 1.1rem;
+  padding-block: 1.4rem;
+  border-top: 1px solid var(--rule);
+}
+
+.ability:first-child {
+  padding-top: 0.5rem;
+  border-top: 0;
+}
+
+.ability__icon {
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 6px;
+  background: var(--hover);
+  object-fit: cover;
+}
+
+.ability__icon--fallback {
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.ability__title {
+  margin: 0 0 0.5rem;
+}
+
+.ability__slot {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--gold);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ability__name {
+  display: block;
+  font-size: 1.35rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.ability__text {
+  max-width: 68ch;
+  margin: 0 0 0.6rem;
+  line-height: 1.6;
+}
+
+.ability__numbers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.75rem;
+  margin: 0.85rem 0 0;
+  font-size: 0.9rem;
+}
+
+.ability__numbers > div {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.ability__numbers dt {
+  color: var(--subtle);
+}
+
+.ability__numbers dd {
+  margin: 0;
+}
+
+.ability__preview {
+  margin-top: 0.35rem;
+}
+
+.ability__preview summary {
+  width: fit-content;
+  padding-block: 0.7rem;
+  color: var(--gold);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ability__preview summary:hover {
+  color: var(--gold-bright);
+}
+
+.ability__video {
+  display: block;
+  width: 100%;
+  max-width: 36rem;
+  height: auto;
+  /* The official previews are about 16:9; reserve that space until the video's own size loads. */
+  aspect-ratio: auto 16 / 9;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: #000;
+}
+
+.abilities__note {
+  max-width: 68ch;
+  margin: 0.5rem 0 0;
+  color: var(--subtle);
+  font-size: 0.85rem;
+}
+
 /* About */
 
 .prose {

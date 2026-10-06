@@ -118,7 +118,7 @@ export function Layout() {
           </p>
           <p>
             Not affiliated with or endorsed by Tencent. Data comes from Tencent’s public China-server ranked stats and is
-            collected once a day.
+            collected once a day. Ability descriptions, icons and previews come from the official Wild Rift site.
           </p>
           <p className="site-footer__links">
             <Link to="/about">About the data</Link>

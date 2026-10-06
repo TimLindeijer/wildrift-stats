@@ -4,7 +4,7 @@ import { bracketsInLatest } from '../lib/champion.ts'
 import { formatLongDate } from '../lib/format.ts'
 import { MIN_ELO_PICK, MIN_FLEX_SHARE } from '../lib/insights.ts'
 import { MAX_RATING } from '../lib/profile.ts'
-import { BRACKETS, BRACKET_LABELS } from '../shared/constants.ts'
+import { BRACKETS, BRACKET_LABELS, OFFICIAL_CHAMPIONS_URL } from '../shared/constants.ts'
 import { TIER_THRESHOLDS, TIER_WEIGHTS } from '../shared/tiers.ts'
 
 const REPO_URL = 'https://github.com/TimLindeijer/wildrift-stats'
@@ -174,7 +174,30 @@ export default function AboutPage() {
           site works it out from the data.
         </dd>
       </dl>
-      <p>Attack speed, critical strike, attack range and ability numbers aren’t shown.</p>
+      <p>Attack speed, critical strike and attack range aren’t shown.</p>
+
+      <h2>Abilities</h2>
+      <p>
+        Each champion page lists the champion’s passive, three abilities and ultimate. Names, descriptions, icons and
+        preview videos come from the champion pages on the <a href={OFFICIAL_CHAMPIONS_URL}>official Wild Rift site</a>, in
+        English. Cooldowns and costs come from Tencent’s champion files. Both are refreshed with every stats update.
+      </p>
+      <dl className="definitions">
+        <dt>Cooldown and cost</dt>
+        <dd>
+          Per ability rank, such as 9/8/8/7 s. A single number means every rank is the same. These are China-server
+          values and can differ on other servers, for example while a patch has reached one server but not another.
+        </dd>
+        <dt>Resource</dt>
+        <dd>
+          Tencent gives energy, fury and other champion-specific resources one generic type, so the site calls them all
+          “resource”.
+        </dd>
+      </dl>
+      <p>
+        Damage, scaling and other values by rank aren’t shown yet. The official descriptions leave most numbers out, and
+        Tencent’s champion files label theirs only in Chinese.
+      </p>
 
       <h2>Limitations</h2>
       <ul>

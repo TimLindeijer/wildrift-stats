@@ -1,6 +1,14 @@
 import { use } from 'react'
-import type { HistoryFile, MoversFile } from '../shared/types.ts'
-import { loadBaseStats, loadCore, loadHistory, loadMovers, type BaseStatsData, type CoreData } from './load.ts'
+import type { HistoryFile, MoversFile, PublicAbilitiesFile } from '../shared/types.ts'
+import {
+  loadAbilities,
+  loadBaseStats,
+  loadCore,
+  loadHistory,
+  loadMovers,
+  type BaseStatsData,
+  type CoreData,
+} from './load.ts'
 
 /* These hooks suspend while loading and throw DataError on failure: render them inside
    <Suspense> and an error boundary. */
@@ -33,4 +41,10 @@ export function useMovers(): MoversFile {
 export function useBaseStats(): BaseStatsData {
   const { version } = useCoreData()
   return use(loadBaseStats(version))
+}
+
+/** One champion's abilities (lazy: only its champion page needs them). */
+export function useAbilities(heroId: number): PublicAbilitiesFile {
+  const { version } = useCoreData()
+  return use(loadAbilities(heroId, version))
 }
