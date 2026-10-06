@@ -12,7 +12,8 @@
       "titleZh": "德玛西亚之力",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10001.png",
       "lanes": ["baron"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":1,"damage":2,"toughness":3,"utility":1}
     },
     {
       "heroId": 10002,
@@ -25,7 +26,8 @@
       "titleZh": "暗裔剑魔",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10002.png",
       "lanes": ["baron","jungle"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":3,"utility":2}
     },
     {
       "heroId": 10003,
@@ -38,7 +40,8 @@
       "titleZh": "光辉女郎",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10003.png",
       "lanes": ["support","mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":1,"damage":3,"toughness":1,"utility":2}
     },
     {
       "heroId": 10004,
@@ -51,7 +54,8 @@
       "titleZh": "殇之木乃伊",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10004.png",
       "lanes": ["jungle"],
-      "roles": ["Tank"]
+      "roles": ["Tank"],
+      "ratings": {"difficulty":1,"damage":2,"toughness":3,"utility":1}
     },
     {
       "heroId": 10005,
@@ -64,7 +68,8 @@
       "titleZh": "影流之镰",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10005.png",
       "lanes": ["jungle"],
-      "roles": ["Assassin"]
+      "roles": ["Assassin"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":2,"utility":1}
     },
     {
       "heroId": 10006,
@@ -77,7 +82,8 @@
       "titleZh": "傲之追猎者",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10006.png",
       "lanes": ["jungle"],
-      "roles": ["Assassin"]
+      "roles": ["Assassin"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10007,
@@ -90,7 +96,8 @@
       "titleZh": "天启者",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10007.png",
       "lanes": ["support","mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":1,"damage":2,"toughness":1,"utility":2}
     },
     {
       "heroId": 10008,
@@ -103,7 +110,8 @@
       "titleZh": "雪原双子",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10008.png",
       "lanes": ["jungle"],
-      "roles": ["Tank"]
+      "roles": ["Tank"],
+      "ratings": {"difficulty":2,"damage":1,"toughness":3,"utility":2}
     },
     {
       "heroId": 10009,
@@ -116,7 +124,8 @@
       "titleZh": "齐天大圣",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10009.png",
       "lanes": ["jungle","baron"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":1,"damage":3,"toughness":2,"utility":1}
     },
     {
       "heroId": 10010,
@@ -129,7 +138,8 @@
       "titleZh": "暗夜猎手",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10010.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10011,
@@ -142,7 +152,8 @@
       "titleZh": "时间刺客",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10011.png",
       "lanes": ["mid","jungle"],
-      "roles": ["Assassin"]
+      "roles": ["Assassin"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":1,"utility":2}
     },
     {
       "heroId": 10012,
@@ -155,7 +166,8 @@
       "titleZh": "发条魔灵",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10012.png",
       "lanes": ["mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":2,"toughness":1,"utility":2}
     },
     {
       "heroId": 10013,
@@ -168,7 +180,8 @@
       "titleZh": "皎月女神",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10013.png",
       "lanes": ["mid","jungle"],
-      "roles": ["Assassin"]
+      "roles": ["Assassin"],
+      "ratings": {"difficulty":1,"damage":3,"toughness":2,"utility":1}
     },
     {
       "heroId": 10014,
@@ -181,7 +194,8 @@
       "titleZh": "暮光星灵",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10014.png",
       "lanes": ["mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10015,
@@ -194,7 +208,8 @@
       "titleZh": "蛮族之王",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10015.png",
       "lanes": ["jungle","baron"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":1,"damage":3,"toughness":2,"utility":1}
     },
     {
       "heroId": 10016,
@@ -207,7 +222,8 @@
       "titleZh": "德邦总管",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10016.png",
       "lanes": ["jungle"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":1,"damage":2,"toughness":2,"utility":1}
     },
     {
       "heroId": 10017,
@@ -220,7 +236,8 @@
       "titleZh": "虚空掠夺者",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10017.png",
       "lanes": ["jungle"],
-      "roles": ["Assassin"]
+      "roles": ["Assassin"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10018,
@@ -233,7 +250,8 @@
       "titleZh": "暴走萝莉",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10018.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10019,
@@ -246,7 +264,8 @@
       "titleZh": "战争之影",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10019.png",
       "lanes": ["jungle"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":2,"damage":2,"toughness":2,"utility":1}
     },
     {
       "heroId": 10020,
@@ -259,7 +278,8 @@
       "titleZh": "魔法猫咪",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10020.png",
       "lanes": ["support"],
-      "roles": ["Support"]
+      "roles": ["Support"],
+      "ratings": {"difficulty":1,"damage":1,"toughness":1,"utility":3}
     },
     {
       "heroId": 10021,
@@ -272,7 +292,8 @@
       "titleZh": "弗雷尔卓德之心",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10021.png",
       "lanes": ["support"],
-      "roles": ["Tank"]
+      "roles": ["Tank"],
+      "ratings": {"difficulty":2,"damage":1,"toughness":2,"utility":2}
     },
     {
       "heroId": 10022,
@@ -285,7 +306,8 @@
       "titleZh": "戏命师",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10022.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10023,
@@ -298,7 +320,8 @@
       "titleZh": "铸星龙王",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10023.png",
       "lanes": ["mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10024,
@@ -311,7 +334,8 @@
       "titleZh": "暗黑元首",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10024.png",
       "lanes": ["mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10025,
@@ -324,7 +348,8 @@
       "titleZh": "卡牌大师",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10025.png",
       "lanes": ["mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10026,
@@ -337,7 +362,8 @@
       "titleZh": "虚空之女",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10026.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10027,
@@ -350,7 +376,8 @@
       "titleZh": "不羁之悦",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10027.png",
       "lanes": ["jungle"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":1,"utility":2}
     },
     {
       "heroId": 10028,
@@ -363,7 +390,8 @@
       "titleZh": "堕落天使",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10028.png",
       "lanes": ["support","mid","jungle"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":1,"damage":2,"toughness":1,"utility":2}
     },
     {
       "heroId": 10029,
@@ -376,7 +404,8 @@
       "titleZh": "痛苦之拥",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10029.png",
       "lanes": ["jungle"],
-      "roles": ["Assassin"]
+      "roles": ["Assassin"],
+      "ratings": {"difficulty":2,"damage":2,"toughness":2,"utility":2}
     },
     {
       "heroId": 10030,
@@ -389,7 +418,8 @@
       "titleZh": "不屈之枪",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10030.png",
       "lanes": ["baron","jungle"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":1,"damage":3,"toughness":2,"utility":1}
     },
     {
       "heroId": 10031,
@@ -402,7 +432,8 @@
       "titleZh": "离群之刺",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10031.png",
       "lanes": ["mid","baron"],
-      "roles": ["Assassin"]
+      "roles": ["Assassin"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10032,
@@ -415,7 +446,8 @@
       "titleZh": "无双剑姬",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10032.png",
       "lanes": ["baron"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":2,"utility":2}
     },
     {
       "heroId": 10033,
@@ -428,7 +460,8 @@
       "titleZh": "蒸汽机器人",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10033.png",
       "lanes": ["support"],
-      "roles": ["Tank"]
+      "roles": ["Tank"],
+      "ratings": {"difficulty":1,"damage":1,"toughness":2,"utility":2}
     },
     {
       "heroId": 10034,
@@ -441,7 +474,8 @@
       "titleZh": "星籁歌姬",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10034.png",
       "lanes": ["support","mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":1,"damage":3,"toughness":1,"utility":3}
     },
     {
       "heroId": 10035,
@@ -454,7 +488,8 @@
       "titleZh": "铁铠冥魂",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10035.png",
       "lanes": ["baron"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":2,"utility":2}
     },
     {
       "heroId": 10036,
@@ -467,7 +502,8 @@
       "titleZh": "黑暗之女",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10036.png",
       "lanes": ["mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":1,"damage":3,"toughness":1,"utility":2}
     },
     {
       "heroId": 10037,
@@ -480,7 +516,8 @@
       "titleZh": "疾风剑豪",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10037.png",
       "lanes": ["mid","baron"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10038,
@@ -493,7 +530,8 @@
       "titleZh": "九尾妖狐",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10038.png",
       "lanes": ["mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10039,
@@ -506,7 +544,8 @@
       "titleZh": "影流之主",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10039.png",
       "lanes": ["mid","jungle"],
-      "roles": ["Assassin"]
+      "roles": ["Assassin"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10040,
@@ -519,7 +558,8 @@
       "titleZh": "武器大师",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10040.png",
       "lanes": ["jungle","baron"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":2,"utility":1}
     },
     {
       "heroId": 10041,
@@ -532,7 +572,8 @@
       "titleZh": "正义天使",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10041.png",
       "lanes": ["baron","mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":3}
     },
     {
       "heroId": 10042,
@@ -545,7 +586,8 @@
       "titleZh": "圣枪游侠",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10042.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10044,
@@ -558,7 +600,8 @@
       "titleZh": "曙光女神",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10044.png",
       "lanes": ["support"],
-      "roles": ["Tank"]
+      "roles": ["Tank"],
+      "ratings": {"difficulty":1,"damage":1,"toughness":3,"utility":1}
     },
     {
       "heroId": 10045,
@@ -571,7 +614,8 @@
       "titleZh": "麦林炮手",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10045.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":1,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10046,
@@ -584,7 +628,8 @@
       "titleZh": "迅捷斥候",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10046.png",
       "lanes": ["baron","mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":1,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10047,
@@ -597,7 +642,8 @@
       "titleZh": "琴瑟仙女",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10047.png",
       "lanes": ["support"],
-      "roles": ["Support"]
+      "roles": ["Support"],
+      "ratings": {"difficulty":1,"damage":2,"toughness":1,"utility":3}
     },
     {
       "heroId": 10048,
@@ -610,7 +656,8 @@
       "titleZh": "仙灵女巫",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10048.png",
       "lanes": ["support"],
-      "roles": ["Support"]
+      "roles": ["Support"],
+      "ratings": {"difficulty":2,"damage":2,"toughness":1,"utility":3}
     },
     {
       "heroId": 10049,
@@ -623,7 +670,8 @@
       "titleZh": "龙血武姬",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10049.png",
       "lanes": ["jungle"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":1,"damage":3,"toughness":2,"utility":1}
     },
     {
       "heroId": 10050,
@@ -636,7 +684,8 @@
       "titleZh": "皮城执法官",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10050.png",
       "lanes": ["jungle"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":1,"damage":2,"toughness":2,"utility":1}
     },
     {
       "heroId": 10051,
@@ -649,7 +698,8 @@
       "titleZh": "逆羽",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10051.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10052,
@@ -662,7 +712,8 @@
       "titleZh": "幻翎",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10052.png",
       "lanes": ["support"],
-      "roles": ["Support"]
+      "roles": ["Support"],
+      "ratings": {"difficulty":2,"damage":1,"toughness":2,"utility":3}
     },
     {
       "heroId": 10053,
@@ -675,7 +726,8 @@
       "titleZh": "瘟疫之源",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10053.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10054,
@@ -688,7 +740,8 @@
       "titleZh": "灵罗娃娃",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10054.png",
       "lanes": ["baron","jungle"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":2,"utility":1}
     },
     {
       "heroId": 10055,
@@ -701,7 +754,8 @@
       "titleZh": "青钢影",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10055.png",
       "lanes": ["baron","jungle"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":2,"utility":1}
     },
     {
       "heroId": 10056,
@@ -714,7 +768,8 @@
       "titleZh": "德玛西亚皇子",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10056.png",
       "lanes": ["jungle","baron"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":1,"damage":2,"toughness":2,"utility":2}
     },
     {
       "heroId": 10057,
@@ -727,7 +782,8 @@
       "titleZh": "破败之王",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10057.png",
       "lanes": ["jungle","baron"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10058,
@@ -740,7 +796,8 @@
       "titleZh": "不灭狂雷",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10058.png",
       "lanes": ["baron","jungle"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":1,"damage":2,"toughness":3,"utility":1}
     },
     {
       "heroId": 10059,
@@ -753,7 +810,8 @@
       "titleZh": "盲僧",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10059.png",
       "lanes": ["jungle"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":2,"utility":1}
     },
     {
       "heroId": 10060,
@@ -766,7 +824,8 @@
       "titleZh": "英勇投弹手",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10060.png",
       "lanes": ["duo","mid"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10061,
@@ -779,7 +838,8 @@
       "titleZh": "狂暴之心",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10061.png",
       "lanes": ["baron","mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10062,
@@ -792,7 +852,8 @@
       "titleZh": "祖安狂人",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10062.png",
       "lanes": ["baron","jungle"],
-      "roles": ["Tank"]
+      "roles": ["Tank"],
+      "ratings": {"difficulty":1,"damage":2,"toughness":3,"utility":1}
     },
     {
       "heroId": 10063,
@@ -805,7 +866,8 @@
       "titleZh": "荆棘之兴",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10063.png",
       "lanes": ["support","mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10064,
@@ -818,7 +880,8 @@
       "titleZh": "披甲龙龟",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10064.png",
       "lanes": ["jungle"],
-      "roles": ["Tank"]
+      "roles": ["Tank"],
+      "ratings": {"difficulty":1,"damage":2,"toughness":3,"utility":1}
     },
     {
       "heroId": 10065,
@@ -831,7 +894,8 @@
       "titleZh": "沙漠死神",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10065.png",
       "lanes": ["baron"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":1,"damage":2,"toughness":3,"utility":1}
     },
     {
       "heroId": 10066,
@@ -844,7 +908,8 @@
       "titleZh": "赏金猎人",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10066.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":1,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10067,
@@ -857,7 +922,8 @@
       "titleZh": "祖安花火",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10067.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10068,
@@ -870,7 +936,8 @@
       "titleZh": "腕豪",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10068.png",
       "lanes": ["baron"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":2,"damage":2,"toughness":2,"utility":1}
     },
     {
       "heroId": 10069,
@@ -883,7 +950,8 @@
       "titleZh": "封魔剑魂",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10069.png",
       "lanes": ["mid","baron","jungle"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10070,
@@ -896,7 +964,8 @@
       "titleZh": "无极剑圣",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10070.png",
       "lanes": ["jungle"],
-      "roles": ["Assassin"]
+      "roles": ["Assassin"],
+      "ratings": {"difficulty":1,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10071,
@@ -909,7 +978,8 @@
       "titleZh": "诺克萨斯之手",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10071.png",
       "lanes": ["baron","jungle"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":2,"utility":1}
     },
     {
       "heroId": 10072,
@@ -922,7 +992,8 @@
       "titleZh": "枪火狂徒",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10072.png",
       "lanes": ["jungle"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":2,"utility":1}
     },
     {
       "heroId": 10073,
@@ -935,7 +1006,8 @@
       "titleZh": "永猎双子",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10073.png",
       "lanes": ["jungle"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":2,"utility":1}
     },
     {
       "heroId": 10074,
@@ -948,7 +1020,8 @@
       "titleZh": "扭曲树精",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10074.png",
       "lanes": ["jungle","baron","support"],
-      "roles": ["Tank"]
+      "roles": ["Tank"],
+      "ratings": {"difficulty":1,"damage":2,"toughness":2,"utility":2}
     },
     {
       "heroId": 10075,
@@ -961,7 +1034,8 @@
       "titleZh": "风暴之怒",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10075.png",
       "lanes": ["support"],
-      "roles": ["Support"]
+      "roles": ["Support"],
+      "ratings": {"difficulty":1,"damage":1,"toughness":1,"utility":3}
     },
     {
       "heroId": 10076,
@@ -974,7 +1048,8 @@
       "titleZh": "圣锤之毅",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10076.png",
       "lanes": ["baron","jungle"],
-      "roles": ["Tank"]
+      "roles": ["Tank"],
+      "ratings": {"difficulty":2,"damage":2,"toughness":3,"utility":1}
     },
     {
       "heroId": 10077,
@@ -987,7 +1062,8 @@
       "titleZh": "荣耀行刑官",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10077.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10078,
@@ -1000,7 +1076,8 @@
       "titleZh": "迷失之牙",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10078.png",
       "lanes": ["baron"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":3,"damage":2,"toughness":3,"utility":1}
     },
     {
       "heroId": 10079,
@@ -1013,7 +1090,8 @@
       "titleZh": "寒冰射手",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10079.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":1,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10080,
@@ -1026,7 +1104,8 @@
       "titleZh": "时光守护者",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10080.png",
       "lanes": ["support"],
-      "roles": ["Support"]
+      "roles": ["Support"],
+      "ratings": {"difficulty":2,"damage":2,"toughness":1,"utility":3}
     },
     {
       "heroId": 10081,
@@ -1039,7 +1118,8 @@
       "titleZh": "牛头酋长",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10081.png",
       "lanes": ["support"],
-      "roles": ["Tank"]
+      "roles": ["Tank"],
+      "ratings": {"difficulty":1,"damage":1,"toughness":3,"utility":2}
     },
     {
       "heroId": 10082,
@@ -1052,7 +1132,8 @@
       "titleZh": "铁血狼母",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10082.png",
       "lanes": ["baron","jungle"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10083,
@@ -1065,7 +1146,8 @@
       "titleZh": "熔岩巨兽",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10083.png",
       "lanes": ["support","baron"],
-      "roles": ["Tank"]
+      "roles": ["Tank"],
+      "ratings": {"difficulty":1,"damage":1,"toughness":3,"utility":1}
     },
     {
       "heroId": 10084,
@@ -1078,7 +1160,8 @@
       "titleZh": "狂野女猎手",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10084.png",
       "lanes": ["jungle","baron"],
-      "roles": ["Assassin"]
+      "roles": ["Assassin"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":1,"utility":2}
     },
     {
       "heroId": 10085,
@@ -1091,7 +1174,8 @@
       "titleZh": "双界灵兔",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10085.png",
       "lanes": ["baron","mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10086,
@@ -1104,7 +1188,8 @@
       "titleZh": "潮汐海灵",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10086.png",
       "lanes": ["mid","jungle"],
-      "roles": ["Assassin"]
+      "roles": ["Assassin"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10087,
@@ -1117,7 +1202,8 @@
       "titleZh": "爆破鬼才",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10087.png",
       "lanes": ["mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10088,
@@ -1130,7 +1216,8 @@
       "titleZh": "虚空恐惧",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10088.png",
       "lanes": ["baron","jungle"],
-      "roles": ["Tank"]
+      "roles": ["Tank"],
+      "ratings": {"difficulty":2,"damage":1,"toughness":3,"utility":1}
     },
     {
       "heroId": 10089,
@@ -1143,7 +1230,8 @@
       "titleZh": "酒桶",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10089.png",
       "lanes": ["jungle","baron"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":2,"toughness":3,"utility":1}
     },
     {
       "heroId": 10090,
@@ -1156,7 +1244,8 @@
       "titleZh": "猩红收割者",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10090.png",
       "lanes": ["mid","baron"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":2,"utility":1}
     },
     {
       "heroId": 10091,
@@ -1169,7 +1258,8 @@
       "titleZh": "唤潮鲛姬",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10091.png",
       "lanes": ["support"],
-      "roles": ["Support"]
+      "roles": ["Support"],
+      "ratings": {"difficulty":2,"damage":2,"toughness":1,"utility":3}
     },
     {
       "heroId": 10092,
@@ -1182,7 +1272,8 @@
       "titleZh": "放逐之刃",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10092.png",
       "lanes": ["baron","jungle"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":2,"utility":1}
     },
     {
       "heroId": 10093,
@@ -1195,7 +1286,8 @@
       "titleZh": "惩戒之箭",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10093.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10094,
@@ -1208,7 +1300,8 @@
       "titleZh": "刀锋舞者",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10094.png",
       "lanes": ["mid","baron"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":3,"damage":2,"toughness":2,"utility":1}
     },
     {
       "heroId": 10095,
@@ -1221,7 +1314,8 @@
       "titleZh": "不祥之刃",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10095.png",
       "lanes": ["mid"],
-      "roles": ["Assassin"]
+      "roles": ["Assassin"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10096,
@@ -1234,7 +1328,8 @@
       "titleZh": "炼金术士",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10096.png",
       "lanes": ["baron"],
-      "roles": ["Tank"]
+      "roles": ["Tank"],
+      "ratings": {"difficulty":2,"damage":2,"toughness":3,"utility":1}
     },
     {
       "heroId": 10097,
@@ -1247,7 +1342,8 @@
       "titleZh": "众星之子",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10097.png",
       "lanes": ["support"],
-      "roles": ["Support"]
+      "roles": ["Support"],
+      "ratings": {"difficulty":1,"damage":1,"toughness":1,"utility":3}
     },
     {
       "heroId": 10098,
@@ -1260,7 +1356,8 @@
       "titleZh": "探险家",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10098.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10099,
@@ -1273,7 +1370,8 @@
       "titleZh": "正义巨像",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10099.png",
       "lanes": ["mid","support"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":2,"toughness":3,"utility":1}
     },
     {
       "heroId": 10100,
@@ -1286,7 +1384,8 @@
       "titleZh": "影哨",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10100.png",
       "lanes": ["mid"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":1,"utility":2}
     },
     {
       "heroId": 10101,
@@ -1299,7 +1398,8 @@
       "titleZh": "未来守护者",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10101.png",
       "lanes": ["baron","mid"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10102,
@@ -1312,7 +1412,8 @@
       "titleZh": "无畏战车",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10102.png",
       "lanes": ["baron"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":2,"damage":2,"toughness":2,"utility":1}
     },
     {
       "heroId": 10103,
@@ -1325,7 +1426,8 @@
       "titleZh": "虚空行者",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10103.png",
       "lanes": ["mid"],
-      "roles": ["Assassin"]
+      "roles": ["Assassin"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10104,
@@ -1338,7 +1440,8 @@
       "titleZh": "沙漠玫瑰",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10104.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":2,"utility":1}
     },
     {
       "heroId": 10105,
@@ -1351,7 +1454,8 @@
       "titleZh": "星界游神",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10105.png",
       "lanes": ["support"],
-      "roles": ["Support"]
+      "roles": ["Support"],
+      "ratings": {"difficulty":2,"damage":1,"toughness":1,"utility":3}
     },
     {
       "heroId": 10106,
@@ -1364,7 +1468,8 @@
       "titleZh": "狂战士",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10106.png",
       "lanes": ["jungle","baron"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":2,"utility":1}
     },
     {
       "heroId": 10107,
@@ -1377,7 +1482,8 @@
       "titleZh": "战争女神",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10107.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":2,"damage":2,"toughness":3,"utility":1}
     },
     {
       "heroId": 10108,
@@ -1390,7 +1496,8 @@
       "titleZh": "明烛",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10108.png",
       "lanes": ["support"],
-      "roles": ["Support"]
+      "roles": ["Support"],
+      "ratings": {"difficulty":2,"damage":1,"toughness":1,"utility":3}
     },
     {
       "heroId": 10109,
@@ -1403,7 +1510,8 @@
       "titleZh": "冰霜女巫",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10109.png",
       "lanes": ["mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":3}
     },
     {
       "heroId": 10110,
@@ -1416,7 +1524,8 @@
       "titleZh": "深渊巨口",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10110.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10112,
@@ -1429,7 +1538,8 @@
       "titleZh": "皮城女警",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10112.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":1,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10116,
@@ -1442,7 +1552,8 @@
       "titleZh": "镕铁少女",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10116.png",
       "lanes": ["support"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":2,"damage":1,"toughness":3,"utility":2}
     },
     {
       "heroId": 10117,
@@ -1455,7 +1566,8 @@
       "titleZh": "上古领主",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10117.png",
       "lanes": ["baron","jungle"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":2,"damage":1,"toughness":3,"utility":2}
     },
     {
       "heroId": 10118,
@@ -1468,7 +1580,8 @@
       "titleZh": "暮光之眼",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10118.png",
       "lanes": ["baron","jungle"],
-      "roles": ["Tank"]
+      "roles": ["Tank"],
+      "ratings": {"difficulty":2,"damage":2,"toughness":3,"utility":3}
     },
     {
       "heroId": 10119,
@@ -1481,7 +1594,8 @@
       "titleZh": "复仇焰魂",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10119.png",
       "lanes": ["mid","support"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":2}
     },
     {
       "heroId": 10121,
@@ -1494,7 +1608,8 @@
       "titleZh": "荒漠屠夫",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10121.png",
       "lanes": ["baron"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":1,"damage":2,"toughness":2,"utility":1}
     },
     {
       "heroId": 10122,
@@ -1507,7 +1622,8 @@
       "titleZh": "邪恶小法师",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10122.png",
       "lanes": ["mid","support"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":1,"damage":3,"toughness":1,"utility":2}
     },
     {
       "heroId": 10123,
@@ -1520,7 +1636,8 @@
       "titleZh": "涤魂圣枪",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10123.png",
       "lanes": ["duo","support"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":2,"damage":2,"toughness":1,"utility":3}
     },
     {
       "heroId": 10124,
@@ -1533,7 +1650,8 @@
       "titleZh": "血港鬼影",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10124.png",
       "lanes": ["support"],
-      "roles": ["Assassin"]
+      "roles": ["Assassin"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":3}
     },
     {
       "heroId": 10125,
@@ -1546,7 +1664,8 @@
       "titleZh": "亡灵战神",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10125.png",
       "lanes": ["baron"],
-      "roles": ["Tank"]
+      "roles": ["Tank"],
+      "ratings": {"difficulty":1,"damage":2,"toughness":3,"utility":1}
     },
     {
       "heroId": 10126,
@@ -1559,7 +1678,8 @@
       "titleZh": "诺克萨斯统领",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10126.png",
       "lanes": ["mid","support","baron"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":2,"toughness":2,"utility":1}
     },
     {
       "heroId": 10127,
@@ -1572,7 +1692,8 @@
       "titleZh": "大发明家",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10127.png",
       "lanes": ["mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":2}
     },
     {
       "heroId": 10128,
@@ -1585,7 +1706,8 @@
       "titleZh": "刀锋之影",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10128.png",
       "lanes": ["mid","jungle"],
-      "roles": ["Assassin"]
+      "roles": ["Assassin"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10129,
@@ -1598,7 +1720,8 @@
       "titleZh": "虚空之眼",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10129.png",
       "lanes": ["mid","support"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":2}
     },
     {
       "heroId": 10130,
@@ -1611,7 +1734,8 @@
       "titleZh": "魂锁典狱长",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10130.png",
       "lanes": ["support"],
-      "roles": ["Tank"]
+      "roles": ["Tank"],
+      "ratings": {"difficulty":3,"damage":1,"toughness":2,"utility":3}
     },
     {
       "heroId": 10131,
@@ -1624,7 +1748,8 @@
       "titleZh": "祖安怒兽",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10131.png",
       "lanes": ["jungle","baron"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":1,"damage":2,"toughness":2,"utility":1}
     },
     {
       "heroId": 10132,
@@ -1637,7 +1762,8 @@
       "titleZh": "深海泰坦",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10132.png",
       "lanes": ["support","baron","jungle"],
-      "roles": ["Tank"]
+      "roles": ["Tank"],
+      "ratings": {"difficulty":2,"damage":1,"toughness":3,"utility":2}
     },
     {
       "heroId": 10133,
@@ -1650,7 +1776,8 @@
       "titleZh": "远古恐惧",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10133.png",
       "lanes": ["jungle"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10134,
@@ -1663,7 +1790,8 @@
       "titleZh": "复仇之矛",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10134.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":2,"utility":1}
     },
     {
       "heroId": 10135,
@@ -1676,7 +1804,8 @@
       "titleZh": "含羞蓓蕾",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10135.png",
       "lanes": ["jungle"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":1,"utility":2}
     },
     {
       "heroId": 10136,
@@ -1689,7 +1818,8 @@
       "titleZh": "山隐之焰",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10136.png",
       "lanes": ["baron","support"],
-      "roles": ["Tank"]
+      "roles": ["Tank"],
+      "ratings": {"difficulty":2,"damage":1,"toughness":3,"utility":2}
     },
     {
       "heroId": 10137,
@@ -1702,7 +1832,8 @@
       "titleZh": "符文法师",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10137.png",
       "lanes": ["mid","baron"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":2}
     },
     {
       "heroId": 10138,
@@ -1715,7 +1846,8 @@
       "titleZh": "炽炎雏龙",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10138.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":2,"utility":1}
     },
     {
       "heroId": 10139,
@@ -1728,7 +1860,8 @@
       "titleZh": "流光镜影",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10139.png",
       "lanes": ["mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":2,"toughness":2,"utility":2}
     },
     {
       "heroId": 10140,
@@ -1741,7 +1874,8 @@
       "titleZh": "机械公敌",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10140.png",
       "lanes": ["baron","mid"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10141,
@@ -1754,7 +1888,8 @@
       "titleZh": "愁云使者",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10141.png",
       "lanes": ["mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":2,"toughness":2,"utility":2}
     },
     {
       "heroId": 10144,
@@ -1767,7 +1902,8 @@
       "titleZh": "奥术先驱",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10144.png",
       "lanes": ["mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10146,
@@ -1780,7 +1916,8 @@
       "titleZh": "岩雀",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10146.png",
       "lanes": ["mid","jungle"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":3,"damage":2,"toughness":1,"utility":2}
     },
     {
       "heroId": 10147,
@@ -1793,7 +1930,8 @@
       "titleZh": "异画师",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10147.png",
       "lanes": ["mid","support"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     },
     {
       "heroId": 10148,
@@ -1806,7 +1944,8 @@
       "titleZh": "不破之誓",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10148.png",
       "lanes": ["duo"],
-      "roles": ["Marksman"]
+      "roles": ["Marksman"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":2}
     },
     {
       "heroId": 10151,
@@ -1819,7 +1958,8 @@
       "titleZh": "永恒梦魇",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10151.png",
       "lanes": ["jungle"],
-      "roles": ["Assassin"]
+      "roles": ["Assassin"],
+      "ratings": {"difficulty":1,"damage":3,"toughness":1,"utility":2}
     },
     {
       "heroId": 10152,
@@ -1832,7 +1972,8 @@
       "titleZh": "纳祖芒荣耀",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10152.png",
       "lanes": ["baron"],
-      "roles": ["Fighter"]
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":3,"damage":2,"toughness":3,"utility":2}
     },
     {
       "heroId": 10166,
@@ -1845,7 +1986,8 @@
       "titleZh": "奇妙远旅",
       "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10166.png",
       "lanes": ["mid"],
-      "roles": ["Mage"]
+      "roles": ["Mage"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":1}
     }
   ]
 }
