@@ -2713,7 +2713,7 @@
           "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/news_live/749d8fcbeb137e8f1d95bcbb8d1f289469a16839-96x96.jpg?accountingTag=WR",
           "video": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data/60182e15e3ad8a0ccb1df038af8b2ded4584b47a.mp4?accountingTag=WR",
           "nameZh": "火箭跳跃",
-          "cooldown": [22,20,18,16],
+          "cooldown": [20,18,16,14],
           "cost": {"type":"mana","values":[60,60,60,60]}
         },
         {
@@ -5117,7 +5117,7 @@
           "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data/7c1d88cdfa246cc355177211576045acd754acc4-96x96.jpg?accountingTag=WR",
           "video": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data/ecb634815030e7fa0277ae404cbfd21c462ca990.mp4?accountingTag=WR",
           "nameZh": "势不可挡",
-          "cooldown": [75,70,65],
+          "cooldown": [85,80,75],
           "cost": {"type":"mana","values":[100,100,100]}
         }
       ]
@@ -8676,7 +8676,7 @@
           "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/7dde88fac7a755597b10fe18a2315a2174bf8983-512x512.png?accountingTag=WR",
           "video": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data_live/497d3fb0a1cf44ae53003fcaf1cd7bfd29f4978b.mp4?accountingTag=WR",
           "nameZh": "定圣诀",
-          "cooldown": [70,60,50],
+          "cooldown": [70,65,60],
           "cost": {"type":"mana","values":[100,100,100]}
         }
       ]
@@ -8742,7 +8742,7 @@
           "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/news_live/16b159ca0e703ce615826b2805999712abfb4f72-256x256.png?accountingTag=WR",
           "video": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data_live/75923fbd6b0c2d38529d2fab6fd728bdd2232c44.mp4?accountingTag=WR",
           "nameZh": "鬼影重重",
-          "cooldown": [110,90,70],
+          "cooldown": [120,100,80],
           "cost": {"type":"mana","values":[100,100,100]}
         }
       ]
