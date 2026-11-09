@@ -1598,6 +1598,20 @@
       "ratings": {"difficulty":2,"damage":3,"toughness":1,"utility":2}
     },
     {
+      "heroId": 10120,
+      "slug": "sylas",
+      "name": "Sylas",
+      "nameSource": "ddragon",
+      "title": "the Unshackled",
+      "key": "Sylas",
+      "nameZh": "塞拉斯",
+      "titleZh": "解脱者",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10120.png",
+      "lanes": ["mid","jungle","baron"],
+      "roles": ["Mage"],
+      "ratings": {"difficulty":3,"damage":3,"toughness":2,"utility":1}
+    },
+    {
       "heroId": 10121,
       "slug": "renekton",
       "name": "Renekton",
@@ -1904,6 +1918,20 @@
       "lanes": ["mid"],
       "roles": ["Mage"],
       "ratings": {"difficulty":3,"damage":3,"toughness":1,"utility":1}
+    },
+    {
+      "heroId": 10145,
+      "slug": "reksai",
+      "name": "Rek'Sai",
+      "nameSource": "ddragon",
+      "title": "the Void Burrower",
+      "key": "Reksai",
+      "nameZh": "雷克塞",
+      "titleZh": "虚空遁地兽",
+      "avatar": "https://game.gtimg.cn/images/lgamem/act/lrlib/img/HeadIcon/H_S_10145.png",
+      "lanes": ["jungle","baron"],
+      "roles": ["Fighter"],
+      "ratings": {"difficulty":2,"damage":3,"toughness":2,"utility":1}
     },
     {
       "heroId": 10146,

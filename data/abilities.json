@@ -2957,7 +2957,7 @@
           "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/news_live/cb597bf3e5189864061e54d2c58a37599553b792-96x96.jpg?accountingTag=WR",
           "video": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data/46a92e1183e4b240854c035e098503aace823e84.mp4?accountingTag=WR",
           "nameZh": "龙牙突刺",
-          "cooldown": [8,7,6,5],
+          "cooldown": [7,6,6,5],
           "cost": null
         },
         {
@@ -2969,7 +2969,7 @@
           "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/news/822b41a001e5bef94e961d2836b0b7fc09b3e2f4-96x96.jpg?accountingTag=WR",
           "video": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data/506b2e1fddff9d2001f716dab9e84ec890b544af.mp4?accountingTag=WR",
           "nameZh": "烈火燎原",
-          "cooldown": [13,12,11,10],
+          "cooldown": [12,11,10,9],
           "cost": null
         },
         {
@@ -2981,7 +2981,7 @@
           "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data/91fb272a3f7b3710a4201b7443b32daa7f87b713-96x96.jpg?accountingTag=WR",
           "video": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data/1b0f96ba80b9c184a1341428462dc7bf53c06a3b.mp4?accountingTag=WR",
           "nameZh": "烈焰吐息",
-          "cooldown": [11,10,9,8],
+          "cooldown": [10,9,8,7],
           "cost": null
         },
         {
@@ -5901,7 +5901,7 @@
           "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/0aeb46cdca0c5ddbe643cafd2ec3b333257a7808-96x96.jpg?accountingTag=WR",
           "video": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data_live/0e0ead24ac03223c0389a92ada29dfcec3b0e722.mp4?accountingTag=WR",
           "nameZh": "强力粘胶",
-          "cooldown": [11,11,11,11],
+          "cooldown": [14,13,12,11],
           "cost": {"type":"mana","values":[60,70,80,90]}
         },
         {
@@ -5913,7 +5913,7 @@
           "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/343d12652e4cb45e53b6d8dbf1798bbc8e14d3e9-96x96.jpg?accountingTag=WR",
           "video": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data_live/4e655594d7ac2ef5b5d52c44d26a5da502837cdf.mp4?accountingTag=WR",
           "nameZh": "过肩摔",
-          "cooldown": [12,12,12,12],
+          "cooldown": [13,13,13,13],
           "cost": {"type":"mana","values":[80,95,110,125]}
         },
         {
@@ -7110,6 +7110,26 @@
           "nameZh": "烈焰风暴",
           "cooldown": [70,65,60],
           "cost": {"type":"mana","values":[100,100,100]}
+        }
+      ]
+    },
+    {
+      "heroId": 10120,
+      "page": null,
+      "abilities": [
+        {"slot":"passive","name":null,"description":[],"icon":null,"video":null,"nameZh":"破敌禁法","cooldown":null,"cost":null},
+        {"slot":"1","name":null,"description":[],"icon":null,"video":null,"nameZh":"锁链鞭击","cooldown":[9,8,7,6],"cost":{"type":"mana","values":[55,55,55,55]}},
+        {"slot":"2","name":null,"description":[],"icon":null,"video":null,"nameZh":"弑君突刺","cooldown":[12,10,8,6],"cost":{"type":"mana","values":[50,60,70,80]}},
+        {"slot":"3","name":null,"description":[],"icon":null,"video":null,"nameZh":"潜掠","cooldown":[12,11,10,9],"cost":{"type":"mana","values":[65,65,65,65]}},
+        {
+          "slot": "ultimate",
+          "name": null,
+          "description": [],
+          "icon": null,
+          "video": null,
+          "nameZh": "其人之道",
+          "cooldown": [80,55,30],
+          "cost": {"type":"mana","values":[75,75,75]}
         }
       ]
     },
@@ -8482,6 +8502,17 @@
           "cooldown": [75,65,55],
           "cost": {"type":"mana","values":[100,100,100]}
         }
+      ]
+    },
+    {
+      "heroId": 10145,
+      "page": null,
+      "abilities": [
+        {"slot":"passive","name":null,"description":[],"icon":null,"video":null,"nameZh":"艾克塞之怒","cooldown":null,"cost":null},
+        {"slot":"1","name":null,"description":[],"icon":null,"video":null,"nameZh":"女王之怒","cooldown":[4,3,3,2],"cost":null},
+        {"slot":"2","name":null,"description":[],"icon":null,"video":null,"nameZh":"遁地","cooldown":[4,4,4,4],"cost":null},
+        {"slot":"3","name":null,"description":[],"icon":null,"video":null,"nameZh":"狂野之噬","cooldown":[6,6,6,6],"cost":null},
+        {"slot":"ultimate","name":null,"description":[],"icon":null,"video":null,"nameZh":"虚空猛冲","cooldown":[70,60,50],"cost":null}
       ]
     },
     {
