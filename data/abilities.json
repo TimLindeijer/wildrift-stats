@@ -7115,18 +7115,60 @@
     },
     {
       "heroId": 10120,
-      "page": null,
+      "page": "sylas",
       "abilities": [
-        {"slot":"passive","name":null,"description":[],"icon":null,"video":null,"nameZh":"破敌禁法","cooldown":null,"cost":null},
-        {"slot":"1","name":null,"description":[],"icon":null,"video":null,"nameZh":"锁链鞭击","cooldown":[9,8,7,6],"cost":{"type":"mana","values":[55,55,55,55]}},
-        {"slot":"2","name":null,"description":[],"icon":null,"video":null,"nameZh":"弑君突刺","cooldown":[12,10,8,6],"cost":{"type":"mana","values":[50,60,70,80]}},
-        {"slot":"3","name":null,"description":[],"icon":null,"video":null,"nameZh":"潜掠","cooldown":[12,11,10,9],"cost":{"type":"mana","values":[65,65,65,65]}},
+        {
+          "slot": "passive",
+          "name": "PETRICITE BURST",
+          "description": [
+            "After using an ability, Sylas stores a charge, stacking up to three. Sylas’ basic attacks expend a charge, whirling his chains and dealing bonus magic damage to enemies hit. If Sylas has at least one charge, he gains attack speed."
+          ],
+          "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/f9fe3f8b98bde4f52a1c713055681ba175d58a5c-512x512.png?accountingTag=WR",
+          "video": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data_live/b5ffb5aa19273b7d2831be4dd6ed3d1b659ff619.mp4?accountingTag=WR",
+          "nameZh": "破敌禁法",
+          "cooldown": null,
+          "cost": null
+        },
+        {
+          "slot": "1",
+          "name": "CHAIN LASH",
+          "description": [
+            "Sylas lashes out with his chains, dealing damage and slowing enemies. After a delay, energy explodes from the chains’ intersection point, dealing magic damage."
+          ],
+          "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/1c617c652a581ec99405240226ca677467b6cb5d-512x512.png?accountingTag=WR",
+          "video": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data_live/204fc9e01de3cc02ffa49ebefe3de19fb09a1348.mp4?accountingTag=WR",
+          "nameZh": "锁链鞭击",
+          "cooldown": [9,8,7,6],
+          "cost": {"type":"mana","values":[55,55,55,55]}
+        },
+        {
+          "slot": "2",
+          "name": "KINGSLAYER",
+          "description": ["Sylas lunges at an enemy with magical force, dealing magic damage and healing himself against enemy champions."],
+          "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/e5f020d67d7861a00eb7146673a858d05c2bae93-512x512.png?accountingTag=WR",
+          "video": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data_live/0834092c9ba29fa0c7baefa86847b25f363c4054.mp4?accountingTag=WR",
+          "nameZh": "弑君突刺",
+          "cooldown": [12,10,8,6],
+          "cost": {"type":"mana","values":[50,60,70,80]}
+        },
+        {
+          "slot": "3",
+          "name": "ABSCOND/ABDUCT",
+          "description": [
+            "Sylas dashes to a location and prepares a recast. He can recast the ability, throwing his chains out, pulling himself to the first enemy hit, and dealing damage."
+          ],
+          "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/2c965de8330fe73c80088eec10762fcf121ab8a9-512x512.png?accountingTag=WR",
+          "video": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data_live/3bb485bb8e7e7f147df78f964f037c7d44a4b9ba.mp4?accountingTag=WR",
+          "nameZh": "潜掠",
+          "cooldown": [12,11,10,9],
+          "cost": {"type":"mana","values":[65,65,65,65]}
+        },
         {
           "slot": "ultimate",
-          "name": null,
-          "description": [],
-          "icon": null,
-          "video": null,
+          "name": "HIJACK",
+          "description": ["Sylas hijacks an enemy champion, stealing their ultimate ability to use freely."],
+          "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/2539d88abcace84ef274d79c15dd660b7af491c2-512x512.png?accountingTag=WR",
+          "video": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data_live/59fd2254b8b62de66bdc1803746b74f490812af8.mp4?accountingTag=WR",
           "nameZh": "其人之道",
           "cooldown": [80,55,30],
           "cost": {"type":"mana","values":[75,75,75]}
