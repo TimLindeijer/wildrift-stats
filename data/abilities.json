@@ -8239,7 +8239,7 @@
           "description": [
             "Hitting champions with abilities and killing enemies with Super Scorcher Breath grants a stack of Dragon Practice. Stacks increase the damage of Smolder’s basic abilities."
           ],
-          "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/bd99a83f831ff02bb0a43ad9a548aaa921342cdc-512x512.png?accountingTag=WR",
+          "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/news_live/bd99a83f831ff02bb0a43ad9a548aaa921342cdc-512x512.png?accountingTag=WR",
           "video": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data_live/c74f72a06a481a6f04fd224fda97e34c670e8079.mp4?accountingTag=WR",
           "nameZh": "龙之研习",
           "cooldown": null,
@@ -8252,7 +8252,7 @@
             "Smolder breathes fire on an enemy, dealing both physical and magic damage. If the target is killed Smolder refunds mana. As he gains more stacks, this ability becomes more powerful.",
             "Passive: Level 1 stacks–ability deals damage to all enemies in the area. Level 2 stacks–ability triggers explosions behind the target. Level 3 stacks–abilitiy burns target for true damage, executing low-health enemy champions."
           ],
-          "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/99582dd343b2833485c2b9fab1fda6aab6d2c0a6-512x512.png?accountingTag=WR",
+          "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/news_live/99582dd343b2833485c2b9fab1fda6aab6d2c0a6-512x512.png?accountingTag=WR",
           "video": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data_live/d1b127048f160334fc1954a649abf832a38f4c17.mp4?accountingTag=WR",
           "nameZh": "超级灼热龙息",
           "cooldown": [5,5,4,4],
@@ -8265,7 +8265,7 @@
             "Smolder lets out an adorable flaming sneeze that explodes when hitting enemy champions. Subsequent explosions deal smaller amounts of damage.",
             "Passive: the explosion deals bonus magic damage."
           ],
-          "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/50cba9719ad8cf7d30d5e56f8593fdf3e6f237db-512x512.png?accountingTag=WR",
+          "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/news_live/50cba9719ad8cf7d30d5e56f8593fdf3e6f237db-512x512.png?accountingTag=WR",
           "video": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data_live/3654012f7d6f238e34d06da60b20fee4e6878e9e.mp4?accountingTag=WR",
           "nameZh": "阿嚏！",
           "cooldown": [12,11,10,9],
@@ -8278,7 +8278,7 @@
             "Smolder takes flight ignoring terrain and bombarding the lowest health enemy. In flight Smolder’s vision range is increased.",
             "Passive: deal bonus magic damage for each hit and gain extra bolts."
           ],
-          "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/9a4d780c2faa097cad4b3f6779655390df9b3d44-512x512.png?accountingTag=WR",
+          "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/news_live/9a4d780c2faa097cad4b3f6779655390df9b3d44-512x512.png?accountingTag=WR",
           "video": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data_live/da5fd189a35a586561e3675d2ad17b15965bec6c.mp4?accountingTag=WR",
           "nameZh": "扑棱，扑棱，扑棱！",
           "cooldown": [18,16,14,12],
@@ -8290,7 +8290,7 @@
           "description": [
             "Smolder calls his mom to breathe fire from above, dealing extra damage and slowing enemies in the center of her fire. Getting hit by the fire himself, Smolder gains health."
           ],
-          "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/883c0867e6183e90565b1b8e251843b390981ddb-512x512.png?accountingTag=WR",
+          "icon": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/news_live/883c0867e6183e90565b1b8e251843b390981ddb-512x512.png?accountingTag=WR",
           "video": "https://cmsassets.rgpub.io/sanity/files/dsfx7636/game_data_live/c441b6d746dc439b576b2454421aa1d75456efa6.mp4?accountingTag=WR",
           "nameZh": "妈----！",
           "cooldown": [80,70,60],
